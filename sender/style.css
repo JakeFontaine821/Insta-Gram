@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+:root{
+    --text: #f6e8f5;
+    --background: #0f050e;
+    --primary: #d284cb;
+    --secondary: #7d1f77;
+    --accent: #e442d9;
+}
+
+body{
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: black;
+    color: var(--text);
+    fill: var(--text);
+
+    font-family: "Josefin Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body *{
+    box-sizing: border-box;
+}
+
+.hidden{
+    display: none !important;
+}
+
+.panel{
+    width: 90vw;
+    height: 90vh;
+    border-radius: 15px;
+    border: 2px solid var(--accent);
+    background: var(--background);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3vh;
+}
+
+.header{
+    font-size: 40px;
+}
+
+.section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.next-button{
+    cursor: pointer;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload-label {
+    border: 2px solid var(--secondary);
+    border-radius: 15px;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.invalid{
+    border: 2px solid red;
+}
