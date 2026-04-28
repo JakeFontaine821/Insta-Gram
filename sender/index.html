@@ -4,42 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insta-Gram</title>
-    <link rel="stylesheet" href="style.css">
+
+    <script type="module" src="./components/RootPage.js"></script>
 </head>
 <body>
-    <div class="panel">
-        <div class="header">Insta-Gram</div>
-
-        <div class="section">
-            <div class="label">Enter You Name</div>
-            <input class="name-input" placeholder="Jake"/>
-        </div>
-
-        <div class="section image-section">
-            <label for="file-upload" class="custom-file-upload-label">Upload Images</label>
-            <input type="file" id="file-upload" class="image-upload" accept="image/png, image/jpeg" multiple />
-        </div>
-
-        <div class="section upload-button" style="flex-direction: row;">
-            Send To Frame
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
-        </div>
-    </div>
-
-    <script>
-        const nameInput = document.querySelector('.name-input');
-        const imageUploadLabel = document.querySelector('.custom-file-upload-label');
-        const imageUpload = document.querySelector('.image-upload');
-        const uploadButton = document.querySelector('.upload-button');
-
-        uploadButton.addEventListener('click', () => {
-            const invalidName = nameInput.classList.toggle('invalid', !nameInput.value);
-            if(invalidName){ return; }
-
-            const invalidUpload = imageUploadLabel.classList.toggle('invalid', !imageUpload.files.length);
-            if(invalidUpload){ return; }
-        });
-
-    </script>
+    <root-page></root-page>
 </body>
 </html>
