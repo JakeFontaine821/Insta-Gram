@@ -5,6 +5,7 @@ const db = new Database(path.join(__dirname, './database.db'));
 db.prepare(`
     CREATE TABLE IF NOT EXISTS albums (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        album_id TEXT,
         album_name TEXT,
         number_of_photos INTEGER
     )
@@ -16,46 +17,49 @@ function getAllAlbums(){
     catch(err){ return { success: false, error: `Failed to get entries from database: ${err}` }; }
 };
 
-const getAlbumStatement = db.prepare(`SELECT * FROM albums WHERE album_name=@albumName`);
-function getAlbum(albumName){
-    try{ return { success: true, entries: getAlbumStatement.get({ albumName }) }; }
+const getAlbumFromIDStatement = db.prepare(`SELECT * FROM albums WHERE album_id=@album_id`);
+function getAlbum(album_id){
+    try{ return { success: true, entries: getAlbumFromIDStatement.get({ album_id }) }; }
     catch(err){ return { success: false, error: `Failed to get entry from database: ${err}` }; }
 };
 
-const createAlbumStatement = db.prepare(`INSERT INTO albums (album_name, number_of_photos) VALUES (@albumName, @numberOfPhotos)`);
-function createNewAlbum(albumName){
-    try{ createAlbumStatement.run({ albumName, numberOfPhotos: 0 }); }
+const createAlbumStatement = db.prepare(`INSERT INTO albums (album_id, album_name, number_of_photos) VALUES (@album_id, @album_name, @number_of_photos)`);
+function createNewAlbum(album_name){
+
+    // Create unique id for each album
+    let album_id = Math.random().toString(36).substring(5);
+    while(getAlbumFromIDStatement.get({ album_id })){ album_id = Math.random().toString(36).substring(5); }
+
+    const newAlbumObj = {
+        album_id,
+        album_name,
+        number_of_photos: 0
+    };
+
+    try{ createAlbumStatement.run(newAlbumObj); }
     catch(err){ return { success: false, error: `Failed to insert into database: ${err}` }; }
 
-    return { success: true };
+    return { success: true, config: newAlbumObj };
 };
 
-const updateAlbumPhotoCount = db.prepare(`UPDATE albums SET number_of_photos=@numberOfPhotos WHERE album_name=@albumName`);
-function incrementPhotoCount(albumName){
-    const albumObject = getAlbumStatement.get({ albumName });
-    if(!albumObject){ return { success: false, error: `No album found with name: ${albumName}` }; }
+const updateAlbumPhotoCount = db.prepare(`UPDATE albums SET number_of_photos=@number_of_photos WHERE album_id=@album_id`);
+function incrementPhotoCount(album_id){
+    const albumObject = getAlbumFromIDStatement.get({ album_id });
+    if(!albumObject){ return { success: false, error: `No album found with album_id: ${album_id}` }; }
 
     const incrementedCount = albumObject.number_of_photos + 1;
 
-    try{ updateAlbumPhotoCount.run({ numberOfPhotos: incrementedCount }); }
+    try{ updateAlbumPhotoCount.run({ album_id, number_of_photos: incrementedCount }); }
     catch(err){ return { success: false, error: `Failed to increment photo count: ${err}` }; }
-    
-    return { success: true };
+
+    return { success: true, count: incrementedCount };
 };
 
-const updateAlbumName = db.prepare(`UPDATE albums SET album_name=@album_name WHERE id=@id`);
-function renameAlbum(oldName, newName){
-    const existingAlbum = getAlbumStatement.get({ albumName: newName });
-    if(existingAlbum){ return { success: false, error: 'Album already exists' }; }
-
-    const albumObject = getAlbumStatement.get({ albumName: oldName });
-    if(!albumObject){ return { success: false, error: `No album found with name: ${oldName}` }; }
-
-    albumObject.album_name = newName;
-
-    try{ updateAlbumName.run(albumObject); }
+const updateAlbumName = db.prepare(`UPDATE albums SET album_name=@album_name WHERE album_id=@album_id`);
+function renameAlbum(album_id, album_name){
+    try{ updateAlbumName.run({ album_id, album_name }); }
     catch(err){ return { success: false, error: `Failed to increment photo count: ${err}` }; }
-    
+
     return { success: true };
 };
 

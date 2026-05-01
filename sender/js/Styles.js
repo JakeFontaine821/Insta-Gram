@@ -21,7 +21,6 @@ AddStyle(`
         width: 100vw;
         /* height: 100vh; */
         margin: 0;
-        padding: 10vh 0 0 0;
         overflow-x: hidden;
         overflow-y: auto;
         background-color: var(--background);
@@ -43,6 +42,30 @@ AddStyle(`
         font-optical-sizing: auto;
         font-weight: 400;
         font-style: normal;
+        font-size: 1rem;
+
+        height: 20px;
+        text-align: center;
+        border: 1px solid transparent;
+        background-color: var(--background);
+    }
+
+    body input:focus{
+        outline: none;
+    }
+
+    body input::placeholder{
+        font-style: italic;
+    }
+
+    body input[type="file"] {
+        display: none;
+    }
+
+    body label{
+        font-size: 1.25rem;
+        border-bottom: 1px solid var(--accent);
+        margin-bottom: 5px;
     }
 
     .hidden{

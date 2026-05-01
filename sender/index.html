@@ -6,8 +6,25 @@
     <title>Insta-Gram</title>
 
     <script type="module" src="./components/RootPage.js"></script>
+    <script type="module" src="./components/AlbumManagerPage.js"></script>
 </head>
 <body>
     <root-page></root-page>
+    <album-manager-page></album-manager-page>
+
+    <script>
+        const rootPage = document.querySelector('root-page');
+        const albumManagerPage = document.querySelector('album-manager-page');
+
+        rootPage.addEventListener('createalbum', () => {
+            rootPage.classList.add('hidden');
+            albumManagerPage.classList.remove('hidden');
+        });
+
+        albumManagerPage.addEventListener('close', () => {
+            rootPage.classList.remove('hidden');
+            albumManagerPage.classList.add('hidden');
+        });
+    </script>
 </body>
 </html>
