@@ -43,21 +43,10 @@ export default class AlbumEntry extends HTMLElement{
         this.albumObj = albumObj;
 
         this.innerHTML = /*html*/`
-            <div class="album-info">
-                <div class="album-name" placeholder="Album Name" value="${this.albumObj.albumName}"></div>
-                <div class="album-photo-count">${this.albumObj.numberOfPhotos}</div>
-            </div>
+            <input class="album-name-input" placeholder="Album Name" value="${this.albumObj.albumName}"/>
             <div class="select-button"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 100 108" fill="none"><path d="m10 45 35 40 45-70" style="stroke-width:15"/></svg></div>
         `;
 
-        // Store whether there are changes or not
-        this.changesMade = !!albumObj?.id;
-
-        const albumName = this.querySelector('.album-name');
-        const selectButton = this.querySelector('.select-button');
-
-        // Toggling album selection if there are no changes
-        this.addEventListener('click', async () => this.classList.toggle('selected'));
     };
 
     get albumName() { this.albumObj.albumName; }

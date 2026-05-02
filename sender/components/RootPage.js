@@ -117,6 +117,7 @@ export default class RootPage extends HTMLElement{
             </div>
         `;
 
+        //<div class="select-button"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 100 108" fill="none"><path d="m10 45 35 40 45-70" style="stroke-width:15"/></svg></div>
         const albumList = this.querySelector('.album-section .list-inner');
         const createNewAlbumButton = this.querySelector('.create-new-album-button');
 
