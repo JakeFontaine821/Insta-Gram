@@ -27,7 +27,6 @@ app.get('/sender/album', (req, res) => {
 });
 
 app.post('/sender/albums/create', (req, res) => {
-    console.log()
     if(!req.body.albumName){ return res.json({ success: false, error: 'Missing required field: \'albumName\'' }); }
     return res.json(AlbumDatabaseManager.createNewAlbum(req.body.albumName));
 });
@@ -41,8 +40,8 @@ app.post('/sender/albums/rename', (req, res) => {
 // Images
 
 // Database setup
-// id | album_name | number_of_photos
+// album_id | album_name | number_of_photos
 
-// id | file_path | sent_by | date_added | album_names
+// id | file_path | sent_by | date_added | album_ids
 
-app.listen(PORT, HOST, () => console.log(`Running on port ${PORT}`));
+app.listen(PORT, HOST, () => console.log(`Running on port ${HOST}:${PORT}`));

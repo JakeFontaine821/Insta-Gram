@@ -1,4 +1,5 @@
 import AddStyle from '../js/Styles.js';
+import AlbumEntry from './AlbumEntry.js';
 import { sendRequest } from '../js/utils.js';
 
 AddStyle(/*css*/`
@@ -9,7 +10,8 @@ AddStyle(/*css*/`
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 10vh;
+        padding: 10vh 0;
+        gap: 5px;
     }
 
     .album-manager-page .header{
@@ -23,6 +25,41 @@ AddStyle(/*css*/`
         left: 10px;
         display: flex;
         align-items: center;
+        border: 1px solid var(--accent);
+        border-radius: 5px;
+        padding: 5px 10px 5px 5px;
+    }
+
+    .album-manager-page .back-button div{
+        padding-top: 4px;
+    }
+
+    .album-manager-page .list-outer{
+        width: 90vw;
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border: 2px solid var(--primary);
+        border-radius: 15px;
+    }
+
+    .album-manager-page .list-inner{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .album-manager-page .list-inner > div{
+        height: 60px;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border-top: 1px solid var(--accent);
+        border-bottom: 1px solid var(--accent);
+        cursor: pointer;
     }
 `);
 
@@ -36,9 +73,27 @@ export default class AlbumManagerPage extends HTMLElement{
             <div class="header">Manage Albums</div>
             <div class="back-button">
                 <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M624-96 240-480l384-384 68 68-316 316 316 316-68 68Z"/></svg>
-                Back
+                <div>Back</div>
+            </div>
+            <div class="list-outer">
+                <div class="list-inner">
+                    <div class="create-new-album-button">Create New Album<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M444-444H240v-72h204v-204h72v204h204v72H516v204h-72v-204Z"/></svg></div>
+                </div>
             </div>
         `;
+
+        const albumList = this.querySelector('.list-inner');
+        const createNewAlbumButton = this.querySelector('.create-new-album-button');
+        createNewAlbumButton.addEventListener('click', () => albumList.insertBefore(new AlbumEntry(), createNewAlbumButton));
+
+        this.querySelector('.back-button').addEventListener('click', () => this.dispatchEvent(new Event('close')));
+
+        (async () => {
+            const albumResponse = await sendRequest('/sender/albums');
+            if(!albumResponse.success){ return; }
+
+            for(const entry of albumResponse.entries){ albumList.insertBefore(new AlbumEntry(entry), createNewAlbumButton); }
+        })();
     };
 };
 customElements.define('album-manager-page', AlbumManagerPage);

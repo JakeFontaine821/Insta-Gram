@@ -40,7 +40,7 @@ AddStyle(/*css*/`
     }
 
     .root-page .name-input{
-        width: 200px;
+        width: 70vw;
     }
 
     .root-page .custom-file-upload-label {
@@ -68,16 +68,7 @@ AddStyle(/*css*/`
         gap: 5px;
     }
 
-    .root-page .list-inner > div{
-        height: 60px;
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        border-top: 1px solid var(--accent);
-        border-bottom: 1px solid var(--accent);
-        cursor: pointer;
-    }    
+    
 `);
 
 export default class RootPage extends HTMLElement{
@@ -92,7 +83,7 @@ export default class RootPage extends HTMLElement{
             <div class="section">
                 <label for="name-input">Enter You Name</label>
                 <div class="row">
-                    <div class="input-wrapper"><input class="name-input" placeholder="Jake (her favorite grandson)"/></div>
+                    <div class="input-wrapper"><input class="name-input" placeholder="Jake (her favorite grandkid)"/></div>
                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
                 </div>
             </div>
@@ -101,9 +92,9 @@ export default class RootPage extends HTMLElement{
                 <label class="album">Select Album</label>
                 <div class="list-outer">
                     <div class="list-inner">
-                        <div class="create-new-album-button">Create New Album<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M444-444H240v-72h204v-204h72v204h204v72H516v204h-72v-204Z"/></svg></div>
                     </div>
                 </div>
+                <div class="album-manager-button">Manage Albums</div>
             </div>
 
             <div class="section image-section">
@@ -119,9 +110,9 @@ export default class RootPage extends HTMLElement{
 
         //<div class="select-button"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 100 108" fill="none"><path d="m10 45 35 40 45-70" style="stroke-width:15"/></svg></div>
         const albumList = this.querySelector('.album-section .list-inner');
-        const createNewAlbumButton = this.querySelector('.create-new-album-button');
 
-        createNewAlbumButton.addEventListener('click', () => this.dispatchEvent(new Event('createalbum')));
+        const albumManagerButton = this.querySelector('.album-manager-button');
+        albumManagerButton.addEventListener('click', () => this.dispatchEvent(new Event('createalbum')));
 
         // On load setup page where necessary
         (async () => {
