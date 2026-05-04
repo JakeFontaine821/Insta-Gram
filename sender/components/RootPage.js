@@ -68,7 +68,9 @@ AddStyle(/*css*/`
         gap: 5px;
     }
 
-    
+    .root-page .album-manager-button{
+        cursor: pointer;
+    }
 `);
 
 export default class RootPage extends HTMLElement{

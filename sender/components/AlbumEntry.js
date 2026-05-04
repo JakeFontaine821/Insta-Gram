@@ -47,16 +47,19 @@ export default class AlbumEntry extends HTMLElement{
                 <input class="album-name-input" placeholder="Album Name" value="${albumObj?.albumName ?? ''}"/>
                 <div class="album-photo-count">${albumObj?.numberOfPhotos ?? 0}</div>
             </div>
-            <div class="save-button"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 100 108" fill="none"><path d="m10 45 35 40 45-70" style="stroke-width:15"/></svg></div>
+            <div class="save-button" disabled>Save Name</div>
         `;
 
         const albumNameInput = this.querySelector('.album-name-input');
         const saveButton = this.querySelector('.save-button');
+
+        // Disable the save button if its the same as whats saved
         albumNameInput.addEventListener('input', () => {
-            //TODO disable save button
+            if(!this.albumObj){ return; }
+            saveButton.toggleAttribute('disabled', albumNameInput.value === this.albumObj.albumName);
         });
 
-        // Save handler for updating the name of album, can only run if 
+        // Save handler for updating the name of album, can only run if its updating
         const saveAlbum = async () => {
             const response = await sendRequest('/sender/albums/rename', { body: { albumId: this.albumObj.albumId, albumName: albumNameInput.value } });
             if(!response.success){ console.error('Failed to save'); }
@@ -72,6 +75,7 @@ export default class AlbumEntry extends HTMLElement{
 
                 saveButton.removeEventListener('click', createAlbum);
                 saveButton.addEventListener('click', () => saveAlbum());
+                saveButton.setAttribute('disabled', '');
 
                 this.albumObj = response.config;
             };
@@ -80,6 +84,9 @@ export default class AlbumEntry extends HTMLElement{
         }
     };
 
-    get albumName() { this.albumObj.albumName; }
+    get albumId(){
+        if(!this.albumObj){ return null; }
+        return this.albumObj.albumId;
+    };
 };
 customElements.define('album-entry', AlbumEntry);
