@@ -32,9 +32,9 @@ app.post('/sender/albums/create', (req, res) => {
 });
 
 app.post('/sender/albums/rename', (req, res) => {
-    if(!req.body.id){ return res.json({ success: false, error: 'Missing required field: \'id\'' }); }
-    if(!req.body.newName){ return res.json({ success: false, error: 'Missing required field: \'newName\'' }); }
-    return res.json(AlbumDatabaseManager.createNewAlbum(req.body.id, req.body.newName));
+    if(!req.body.albumId){ return res.json({ success: false, error: 'Missing required field: \'albumId\'' }); }
+    if(!req.body.albumName){ return res.json({ success: false, error: 'Missing required field: \'albumName\'' }); }
+    return res.json(AlbumDatabaseManager.createNewAlbum(req.body.albumId, req.body.albumName));
 });
 
 // Images
