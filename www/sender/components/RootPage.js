@@ -1,5 +1,5 @@
 import AddStyle from '../js/Styles.js';
-import AlbumEntry from './AlbumEntry.js';
+import SelectableAlbumEntry from './SelectableAlbumEntry.js';
 import { sendRequest } from '../js/utils.js';
 
 AddStyle(/*css*/`
@@ -49,6 +49,7 @@ AddStyle(/*css*/`
         display: inline-block;
         padding: 6px 12px;
         cursor: pointer;
+        background: var(--f);
     }
 
     .root-page .list-outer{
@@ -58,6 +59,8 @@ AddStyle(/*css*/`
         overflow-x: hidden;
         border: 2px solid var(--primary);
         border-radius: 15px;
+        padding: 2px;
+        margin-bottom: 5px;
     }
 
     .root-page .list-inner{
@@ -85,7 +88,7 @@ export default class RootPage extends HTMLElement{
             <div class="section">
                 <label for="name-input">Enter You Name</label>
                 <div class="row">
-                    <div class="input-wrapper"><input class="name-input" placeholder="Jake (her favorite grandkid)"/></div>
+                    <div class="input-wrapper"><input class="name-input" placeholder="Jake (Gram's favorite grandkid)"/></div>
                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
                 </div>
             </div>
@@ -94,6 +97,7 @@ export default class RootPage extends HTMLElement{
                 <label class="album">Select Album</label>
                 <div class="list-outer">
                     <div class="list-inner">
+                        <div class="no-albums-text">Go create some albums :)</div>
                     </div>
                 </div>
                 <div class="album-manager-button">Manage Albums</div>
@@ -110,19 +114,19 @@ export default class RootPage extends HTMLElement{
             </div>
         `;
 
-        //<div class="select-button"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 100 108" fill="none"><path d="m10 45 35 40 45-70" style="stroke-width:15"/></svg></div>
-        const albumList = this.querySelector('.album-section .list-inner');
-
         const albumManagerButton = this.querySelector('.album-manager-button');
         albumManagerButton.addEventListener('click', () => this.dispatchEvent(new Event('createalbum')));
 
-        // On load setup page where necessary
-        (async () => {
-            const albumResponse = await sendRequest('/sender/albums');
-            if(!albumResponse.success){ return; }
+        this.loadAlbums();
+    };
 
-            console.log(albumResponse);/*TODO*/
-        })();
+    async loadAlbums(){
+        const albumResponse = await sendRequest('/sender/albums');
+        if(!albumResponse.success || !albumResponse.entries.length){ return; }
+
+        const albumList = this.querySelector('.album-section .list-inner');
+        while(albumList.firstChild){ albumList.firstChild.remove(); }
+        for(const entry of albumResponse.entries){ albumList.appendChild(new SelectableAlbumEntry(entry)); }
     };
 };
 customElements.define('root-page', RootPage);

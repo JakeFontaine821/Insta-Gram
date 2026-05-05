@@ -4,7 +4,7 @@ const db = new Database(path.join(__dirname, './database.db'));
 
 db.prepare(`
     CREATE TABLE IF NOT EXISTS albums (
-        album_id         TEXT NOT NULL,
+        album_id         TEXT NOT NULL PRIMARY KEY,
         album_name       TEXT NOT NULL,
         number_of_photos INTEGER NOT NULL
     ) WITHOUT ROWID

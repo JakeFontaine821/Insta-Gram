@@ -15,6 +15,15 @@ AddStyle(`
         --primary: #713e7c;
         --secondary: #ceaad0;
         --accent: #bc87b0;
+
+        --a: #82729e;
+        --b: #c9b0b5;
+        --c: #ad9187;
+
+        --d: #a7abde;
+        --e: #c8ceee;
+        --f: #eadaf0;
+        --g: #f3e4f5;
     }
 
     body{

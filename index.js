@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const app = express();
 app.use(express.json());
-app.use('/', express.static(path.join(__dirname, './')));
+app.use('/', express.static(path.join(__dirname, './www')));
 
 const { networkInterfaces } = require('os');
 const HOST = Array.from(Object.values(networkInterfaces())).flat().find(net => net.family === 'IPv4' && !net.internal).address;
@@ -10,15 +10,16 @@ const PORT = 3000;
 
 app.get('/', (req, res) => res.json({ success: true, message: "Sending JSON" }));
 
-app.get('/frame', (req, res) => res.sendFile(path.join(__dirname, '/frame/index.html')));
+app.get('/frame', (req, res) => res.sendFile(path.join(__dirname, '/www/frame/index.html')));
 
 /****************************************************************************************************/
 /*                              SENDER SPECIFIC ENDPOINTS                                           */
 /****************************************************************************************************/
-app.get('/sender', (req, res) => res.sendFile(path.join(__dirname, '/sender/index.html')));
+app.get('/sender', (req, res) => res.sendFile(path.join(__dirname, '/www/sender/index.html')));
 
 // Albums
-const AlbumDatabaseManager = require(path.join(__dirname, './albumDatabaseManager.js'))
+const AlbumDatabaseManager = require(path.join(__dirname, '/api/albumDatabaseManager.js'));
+const ImageDatabaseManager = require(path.join(__dirname, '/api/imageDatabaseManager.js'));
 app.get('/sender/albums', (req, res) => res.json(AlbumDatabaseManager.getAllAlbums()));
 
 app.get('/sender/album', (req, res) => {
@@ -34,7 +35,7 @@ app.post('/sender/albums/create', (req, res) => {
 app.post('/sender/albums/rename', (req, res) => {
     if(!req.body.albumId){ return res.json({ success: false, error: 'Missing required field: \'albumId\'' }); }
     if(!req.body.albumName){ return res.json({ success: false, error: 'Missing required field: \'albumName\'' }); }
-    return res.json(AlbumDatabaseManager.createNewAlbum(req.body.albumId, req.body.albumName));
+    return res.json(AlbumDatabaseManager.renameAlbum(req.body.albumId, req.body.albumName));
 });
 
 // Images

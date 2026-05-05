@@ -1,5 +1,5 @@
 import AddStyle from '../js/Styles.js';
-import AlbumEntry from './AlbumEntry.js';
+import EditableAlbumEntry from './EditableAlbumEntry.js';
 import { sendRequest } from '../js/utils.js';
 
 AddStyle(/*css*/`
@@ -15,7 +15,7 @@ AddStyle(/*css*/`
     }
 
     .album-manager-page .header{
-        font-size: 3rem;
+        font-size: 2.5rem;
         font-weight: 500;
     }
 
@@ -39,6 +39,7 @@ AddStyle(/*css*/`
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
+        padding: 2px;
         border: 2px solid var(--primary);
         border-radius: 15px;
     }
@@ -60,6 +61,7 @@ AddStyle(/*css*/`
         border-top: 1px solid var(--accent);
         border-bottom: 1px solid var(--accent);
         cursor: pointer;
+        background-image: linear-gradient(to bottom, var(--secondary), var(--background) 8%, var(--background) 92%, var(--secondary));
     }
 `);
 
@@ -84,7 +86,7 @@ export default class AlbumManagerPage extends HTMLElement{
 
         const albumList = this.querySelector('.list-inner');
         const createNewAlbumButton = this.querySelector('.create-new-album-button');
-        createNewAlbumButton.addEventListener('click', () => albumList.insertBefore(new AlbumEntry(), createNewAlbumButton));
+        createNewAlbumButton.addEventListener('click', () => albumList.insertBefore(new EditableAlbumEntry(), createNewAlbumButton));
 
         this.querySelector('.back-button').addEventListener('click', () => this.dispatchEvent(new Event('close')));
 
@@ -92,7 +94,7 @@ export default class AlbumManagerPage extends HTMLElement{
             const albumResponse = await sendRequest('/sender/albums');
             if(!albumResponse.success){ return; }
 
-            for(const entry of albumResponse.entries){ albumList.insertBefore(new AlbumEntry(entry), createNewAlbumButton); }
+            for(const entry of albumResponse.entries){ albumList.insertBefore(new EditableAlbumEntry(entry), createNewAlbumButton); }
         })();
     };
 };

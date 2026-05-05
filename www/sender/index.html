@@ -25,6 +25,8 @@
             rootPage.classList.remove('hidden');
             albumManagerPage.classList.add('hidden');
         });
+
+        albumManagerPage.addEventListener('update', () => rootPage.loadAlbums());
     </script>
 </body>
 </html>
