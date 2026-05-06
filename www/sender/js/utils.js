@@ -5,7 +5,17 @@ export async function sendRequest(url, params={}){
         params.method = 'POST';
         params.headers = {'Content-Type': 'application/json'};
         params.body = JSON.stringify(params.body);
-    };
+    }
+    else if(params.image && params.metadata){
+        params.method = 'POST';
+
+        const formData = new FormData();
+        formData.append('imageFile', params.image);
+        formData.append('metadata', JSON.stringify(params.metadata));
+        delete params.image;
+
+        params.body = formData;
+    }
     
     let response;
     try{ response = await fetch(url, params); }

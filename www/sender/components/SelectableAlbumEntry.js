@@ -78,7 +78,7 @@ export default class SelectableAlbumEntry extends HTMLElement{
         this.addEventListener('click', () => this.classList.toggle('selected'));
     };
 
-    get albumId(){
+    get id(){
         if(!this.albumObj){ return null; }
         return this.albumObj.albumId;
     };

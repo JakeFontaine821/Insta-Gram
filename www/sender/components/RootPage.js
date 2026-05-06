@@ -8,7 +8,7 @@ AddStyle(/*css*/`
         flex-direction: column;
         align-items: center;
         gap: 30px;
-        padding-top: 10vh;
+        padding: 10vh 0;
     }
 
     .root-page .header{
@@ -108,7 +108,7 @@ export default class RootPage extends HTMLElement{
                 <input type="file" id="file-upload" class="image-upload" accept="image/png, image/jpeg" multiple />
             </div>
 
-            <div class="section upload-button" style="flex-direction: row;">
+            <div class="section send-button" style="flex-direction: row;">
                 Send To Frame
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
             </div>
@@ -116,6 +116,30 @@ export default class RootPage extends HTMLElement{
 
         const albumManagerButton = this.querySelector('.album-manager-button');
         albumManagerButton.addEventListener('click', () => this.dispatchEvent(new Event('createalbum')));
+
+        const sendButton = this.querySelector('.send-button');
+        const nameInput = this.querySelector('.name-input');
+        const imageUploadInput = this.querySelector('.image-upload');
+        const albumList = this.querySelector('.album-section .list-inner');
+        sendButton.addEventListener('click', async () => {
+            if(!imageUploadInput.files.length){ return; }
+
+            sendButton.classList.add('loading');
+
+            for(const file of imageUploadInput.files){
+                const response = await sendRequest('/sender/photo/save', {
+                    image: file,
+                    metadata: {
+                        sentBy: nameInput.value,
+                        albumIds: JSON.stringify(Array.from(albumList.querySelectorAll('.selected'), albumEntry => albumEntry.id)),
+                        dateAdded: Date.now(),
+                    }
+                });
+                if(!response.success){ console.error(' You suck ', response.error); }
+            }
+
+            sendButton.classList.remove('loading');
+        });
 
         this.loadAlbums();
     };

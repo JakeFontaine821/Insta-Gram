@@ -1,13 +1,34 @@
 const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 const express = require('express');
+
 const app = express();
 app.use(express.json());
 app.use('/', express.static(path.join(__dirname, './www')));
 
-const { networkInterfaces } = require('os');
-const HOST = Array.from(Object.values(networkInterfaces())).flat().find(net => net.family === 'IPv4' && !net.internal).address;
-const PORT = 3000;
+/****************************************************************************************************/
+/*                              SETTING UP IMAGE STORAGE                                            */
+/****************************************************************************************************/
+const uploadDir = './images';
+if (!fs.existsSync(uploadDir)){ fs.mkdirSync(uploadDir); }
 
+// Initialize multer with the storage engine (accepts files up to 5MB)
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, uploadDir);
+        },
+        filename: (req, file, cb) => {
+            const name = file.originalname.split('.')[0];
+            cb(null, `${Date.now()}__${Math.random().toString(36).substring(7)}__${file.originalname}`);
+        }
+    }),
+});
+
+/****************************************************************************************************/
+/*                              FRAME ENDPOINTS                                            */
+/****************************************************************************************************/
 app.get('/', (req, res) => res.json({ success: true, message: "Sending JSON" }));
 
 app.get('/frame', (req, res) => res.sendFile(path.join(__dirname, '/www/frame/index.html')));
@@ -39,10 +60,25 @@ app.post('/sender/albums/rename', (req, res) => {
 });
 
 // Images
+app.post('/sender/photo/save', upload.single('imageFile'), (req, res) => {
+    if (!req.file) { return res.json({ success: false, error: 'Missing required field: \'file\'' }); }
+    if (!req.body.metadata) { return res.json({ success: false, error: 'Missing required field: \'metadata\'' }); }
+
+    const metadata = JSON.parse(req.body.metadata);
+    if (!metadata.sentBy) { return res.json({ success: false, error: 'Missing required field: \'sentBy\'' }); }
+    if (!metadata.albumIds) { return res.json({ success: false, error: 'Missing required field: \'albumIds\'' }); }
+    if (!metadata.dateAdded) { return res.json({ success: false, error: 'Missing required field: \'dateAdded\'' }); }
+    
+    return res.json(ImageDatabaseManager.addImage(Object.assign(metadata, { filePath: req.file.path })));
+});
+
 
 // Database setup
 // album_id | album_name | number_of_photos
 
 // id | file_path | sent_by | date_added | album_ids
 
+const { networkInterfaces } = require('os');
+const HOST = Array.from(Object.values(networkInterfaces())).flat().find(net => net.family === 'IPv4' && !net.internal).address;
+const PORT = 3000;
 app.listen(PORT, HOST, () => console.log(`Running on port ${HOST}:${PORT}`));
