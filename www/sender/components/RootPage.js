@@ -53,7 +53,6 @@ AddStyle(/*css*/`
     }
 
     .root-page .list-outer{
-        height: 300px;
         width: 90vw;
         overflow-y: auto;
         overflow-x: hidden;
@@ -61,6 +60,18 @@ AddStyle(/*css*/`
         border-radius: 15px;
         padding: 2px;
         margin-bottom: 5px;
+    }
+
+    .root-page .album-section .list-outer{
+        height: 300px;
+    }
+
+    .root-page .image-section .list-outer{
+        max-height: 200px;
+    }
+
+    .root-page .image-section .list-outer.empty{
+        border: 2px solid transparent;
     }
 
     .root-page .list-inner{
@@ -106,6 +117,10 @@ export default class RootPage extends HTMLElement{
             <div class="section image-section">
                 <label for="file-upload" class="custom-file-upload-label">Upload Images</label>
                 <input type="file" id="file-upload" class="image-upload" accept="image/png, image/jpeg" multiple />
+
+                <div class="list-outer empty">
+                    <div class="list-inner"></div>
+                </div>
             </div>
 
             <div class="section send-button" style="flex-direction: row;">
@@ -117,11 +132,27 @@ export default class RootPage extends HTMLElement{
         const albumManagerButton = this.querySelector('.album-manager-button');
         albumManagerButton.addEventListener('click', () => this.dispatchEvent(new Event('createalbum')));
 
+        const imageUploadInput = this.querySelector('.image-upload');
+        imageUploadInput.addEventListener('change', () => {
+            console.log(imageUploadInput.files.length)
+            this.querySelector('.image-section .list-outer').classList.toggle('empty', !imageUploadInput.files.length);
+        });
+
         const sendButton = this.querySelector('.send-button');
         const nameInput = this.querySelector('.name-input');
-        const imageUploadInput = this.querySelector('.image-upload');
         const albumList = this.querySelector('.album-section .list-inner');
         sendButton.addEventListener('click', async () => {
+            // const a = new DataTransfer();
+            // for(const [i, file] of Array.from(imageUploadInput.files).entries()){
+            //     if(Math.random() < .5){
+            //         a.items.add(file);
+            //     }
+            // }
+            // console.log(a)
+            // imageUploadInput.files = dataTransfer.files;
+
+            // return;
+
             if(!imageUploadInput.files.length){ return; }
 
             sendButton.classList.add('loading');
@@ -135,7 +166,9 @@ export default class RootPage extends HTMLElement{
                         dateAdded: Date.now(),
                     }
                 });
-                if(!response.success){ console.error(' You suck ', response.error); }
+                if(!response.success){ console.error(' You suck ', response.error); continue; }
+
+
             }
 
             sendButton.classList.remove('loading');
