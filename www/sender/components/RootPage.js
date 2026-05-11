@@ -193,9 +193,7 @@ export default class RootPage extends HTMLElement{
 
                 // if send success remove from list
                 const dataTransfer = new DataTransfer();
-                for(const obj of imageList.filter(obj => !obj.success)){
-                    dataTransfer.items.add(obj.file);
-                }
+                for(const obj of imageList.filter(obj => !obj.success)){ dataTransfer.items.add(obj.file); }
 
                 imageUploadInput.files = dataTransfer.files;
                 imageUploadInput.dispatchEvent(new Event('change'));
