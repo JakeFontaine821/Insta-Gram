@@ -1,5 +1,6 @@
 import AddStyle from '../js/Styles.js';
 import SelectableAlbumEntry from './SelectableAlbumEntry.js';
+import ImageEntry from './imageEntry.js';
 import { sendRequest } from '../js/utils.js';
 
 AddStyle(/*css*/`
@@ -85,6 +86,10 @@ AddStyle(/*css*/`
     .root-page .album-manager-button{
         cursor: pointer;
     }
+
+    .root-page .error-text{
+        color: red;
+    }
 `);
 
 export default class RootPage extends HTMLElement{
@@ -102,6 +107,7 @@ export default class RootPage extends HTMLElement{
                     <div class="input-wrapper"><input class="name-input" placeholder="Jake (Gram's favorite grandkid)"/></div>
                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
                 </div>
+                <div class="name error-text"></div>
             </div>
 
             <div class="section album-section">
@@ -121,6 +127,7 @@ export default class RootPage extends HTMLElement{
                 <div class="list-outer empty">
                     <div class="list-inner"></div>
                 </div>
+                <div class="images error-text"></div>
             </div>
 
             <div class="section send-button" style="flex-direction: row;">
@@ -133,27 +140,44 @@ export default class RootPage extends HTMLElement{
         albumManagerButton.addEventListener('click', () => this.dispatchEvent(new Event('createalbum')));
 
         const imageUploadInput = this.querySelector('.image-upload');
+        const imageList = this.querySelector('.image-section .list-inner');
         imageUploadInput.addEventListener('change', () => {
-            console.log(imageUploadInput.files.length)
+            console.log('changed');
+            while(imageList.firstChild){ imageList.firstChild.remove(); }
             this.querySelector('.image-section .list-outer').classList.toggle('empty', !imageUploadInput.files.length);
+
+            for(const [i, file] of Array.from(imageUploadInput.files).entries()){
+                const newImageEntry = new ImageEntry(i, file);
+
+                newImageEntry.addEventListener('remove', ({ index }) => {
+                    const dataTransfer = new DataTransfer();
+
+                    for (let i = 0; i < imageUploadInput.files.length; i++) {
+                        if (i !== index) { dataTransfer.items.add(imageUploadInput.files[i]); }
+                    }
+
+                    imageUploadInput.files = dataTransfer.files;
+                    imageUploadInput.dispatchEvent(new Event('change'));
+                });
+
+                imageList.appendChild(newImageEntry);
+            }
         });
 
         const sendButton = this.querySelector('.send-button');
         const nameInput = this.querySelector('.name-input');
+        const nameErrorText = this.querySelector('.name.error-text');
         const albumList = this.querySelector('.album-section .list-inner');
+        const imagesErrorText = this.querySelector('.images.error-text');
         sendButton.addEventListener('click', async () => {
-            // const a = new DataTransfer();
-            // for(const [i, file] of Array.from(imageUploadInput.files).entries()){
-            //     if(Math.random() < .5){
-            //         a.items.add(file);
-            //     }
-            // }
-            // console.log(a)
-            // imageUploadInput.files = dataTransfer.files;
+            if(!nameInput.length || !imageUploadInput.files.length){
 
-            // return;
+                nameErrorText.innerHTML = !nameInput.length ? 'Need to input a name!' : '';
+                imagesErrorText.innerHTML = !imageUploadInput.files.length ? 'Need to select images!' : '';
 
-            if(!imageUploadInput.files.length){ return; }
+                return;
+            }
+            else{ nameErrorText.innerHTML = ''; imagesErrorText.innerHTML = ''; }
 
             sendButton.classList.add('loading');
 
@@ -167,8 +191,6 @@ export default class RootPage extends HTMLElement{
                     }
                 });
                 if(!response.success){ console.error(' You suck ', response.error); continue; }
-
-
             }
 
             sendButton.classList.remove('loading');

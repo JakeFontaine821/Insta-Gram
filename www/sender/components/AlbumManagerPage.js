@@ -74,7 +74,7 @@ export default class AlbumManagerPage extends HTMLElement{
         this.innerHTML = /*html*/`
             <div class="header">Manage Albums</div>
             <div class="back-button">
-                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M624-96 240-480l384-384 68 68-316 316 316 316-68 68Z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px"><path d="M624-96 240-480l384-384 68 68-316 316 316 316-68 68Z"/></svg>
                 <div>Back</div>
             </div>
             <div class="list-outer">
