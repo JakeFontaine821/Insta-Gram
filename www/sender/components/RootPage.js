@@ -142,7 +142,6 @@ export default class RootPage extends HTMLElement{
         const imageUploadInput = this.querySelector('.image-upload');
         const imageList = this.querySelector('.image-section .list-inner');
         imageUploadInput.addEventListener('change', () => {
-            console.log('changed');
             while(imageList.firstChild){ imageList.firstChild.remove(); }
             this.querySelector('.image-section .list-outer').classList.toggle('empty', !imageUploadInput.files.length);
 
@@ -151,7 +150,6 @@ export default class RootPage extends HTMLElement{
 
                 newImageEntry.addEventListener('remove', ({ index }) => {
                     const dataTransfer = new DataTransfer();
-
                     for (let i = 0; i < imageUploadInput.files.length; i++) {
                         if (i !== index) { dataTransfer.items.add(imageUploadInput.files[i]); }
                     }
@@ -170,27 +168,38 @@ export default class RootPage extends HTMLElement{
         const albumList = this.querySelector('.album-section .list-inner');
         const imagesErrorText = this.querySelector('.images.error-text');
         sendButton.addEventListener('click', async () => {
-            if(!nameInput.length || !imageUploadInput.files.length){
-
-                nameErrorText.innerHTML = !nameInput.length ? 'Need to input a name!' : '';
+            if(!nameInput.value.length || !imageUploadInput.files.length){
+                nameErrorText.innerHTML = !nameInput.value.length ? 'Need to input a name!' : '';
                 imagesErrorText.innerHTML = !imageUploadInput.files.length ? 'Need to select images!' : '';
-
                 return;
             }
             else{ nameErrorText.innerHTML = ''; imagesErrorText.innerHTML = ''; }
 
             sendButton.classList.add('loading');
 
-            for(const file of imageUploadInput.files){
+            const imageList = Array.from(imageUploadInput.files, (file, i) => ({ file, i, success: false }));
+            for(const fileObj of imageList){
+                // Send to frame
                 const response = await sendRequest('/sender/photo/save', {
-                    image: file,
+                    image: fileObj.file,
                     metadata: {
                         sentBy: nameInput.value,
                         albumIds: JSON.stringify(Array.from(albumList.querySelectorAll('.selected'), albumEntry => albumEntry.id)),
                         dateAdded: Date.now(),
                     }
                 });
-                if(!response.success){ console.error(' You suck ', response.error); continue; }
+                if(!response.success){ imagesErrorText.innerHTML = 'Failed to send these images^'; console.error(' You suck ', response.error); continue; }
+                fileObj.success = true;
+
+                // if send success remove from list
+                const dataTransfer = new DataTransfer();
+                for(const obj of imageList.filter(obj => !obj.success)){
+                    dataTransfer.items.add(obj.file);
+                }
+
+                imageUploadInput.files = dataTransfer.files;
+                imageUploadInput.dispatchEvent(new Event('change'));
+                await new Promise(resolve => setTimeout(() => resolve(), 200));
             }
 
             sendButton.classList.remove('loading');

@@ -9,14 +9,14 @@
     Hello
 
     <!-- Include the library via CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="../lib/qrcode.js"></script>
 
     <!-- Container for the QR code -->
     <div id="qrcode"></div>
 
     <script>
         // Basic usage
-        new QRCode(document.getElementById("qrcode"), "http://192.168.0.12:3000/sender");
+        new QRCode(document.getElementById("qrcode"), "http://192.168.0.13:8080/sender");
     </script>
 </body>
 </html>
