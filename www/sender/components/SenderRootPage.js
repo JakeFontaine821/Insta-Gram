@@ -4,7 +4,7 @@ import ImageEntry from './imageEntry.js';
 import { sendRequest } from '../js/utils.js';
 
 AddStyle(/*css*/`
-    .root-page{
+    .sender-root-page{
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -12,39 +12,39 @@ AddStyle(/*css*/`
         padding: 10vh 0;
     }
 
-    .root-page .header{
+    .sender-root-page .header{
         font-size: 3rem;
         font-weight: 500;
     }
 
-    .root-page .section{
+    .sender-root-page .section{
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
-    .root-page .row{
+    .sender-root-page .row{
         display: flex;
         align-items: center;
         position: relative;
     }
 
-    .root-page .row svg{
+    .sender-root-page .row svg{
         position: absolute;
         right: -20px;
     }
 
-    .root-page .input-wrapper{
+    .sender-root-page .input-wrapper{
         padding: 10px 15px;
         border: 1px solid var(--primary);
         border-radius: 8px;
     }
 
-    .root-page .name-input{
+    .sender-root-page .name-input{
         width: 70vw;
     }
 
-    .root-page .custom-file-upload-label {
+    .sender-root-page .custom-file-upload-label {
         border: 2px solid var(--accent);
         border-radius: 15px;
         display: inline-block;
@@ -53,7 +53,7 @@ AddStyle(/*css*/`
         background: var(--f);
     }
 
-    .root-page .list-outer{
+    .sender-root-page .list-outer{
         width: 90vw;
         overflow-y: auto;
         overflow-x: hidden;
@@ -63,19 +63,19 @@ AddStyle(/*css*/`
         margin-bottom: 5px;
     }
 
-    .root-page .album-section .list-outer{
+    .sender-root-page .album-section .list-outer{
         height: 300px;
     }
 
-    .root-page .image-section .list-outer{
+    .sender-root-page .image-section .list-outer{
         max-height: 200px;
     }
 
-    .root-page .image-section .list-outer.empty{
+    .sender-root-page .image-section .list-outer.empty{
         border: 2px solid transparent;
     }
 
-    .root-page .list-inner{
+    .sender-root-page .list-inner{
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -83,20 +83,20 @@ AddStyle(/*css*/`
         gap: 5px;
     }
 
-    .root-page .album-manager-button{
+    .sender-root-page .album-manager-button{
         cursor: pointer;
     }
 
-    .root-page .error-text{
+    .sender-root-page .error-text{
         color: red;
     }
 `);
 
-export default class RootPage extends HTMLElement{
+export default class SenderRootPage extends HTMLElement{
     constructor(){
         super();
 
-        this.classList.add('root-page');
+        this.classList.add('sender-root-page');
 
         this.innerHTML = /*html*/`
             <div class="header">Insta-Gram</div>
@@ -215,4 +215,4 @@ export default class RootPage extends HTMLElement{
         for(const entry of albumResponse.entries){ albumList.appendChild(new SelectableAlbumEntry(entry)); }
     };
 };
-customElements.define('root-page', RootPage);
+customElements.define('sender-root-page', SenderRootPage);

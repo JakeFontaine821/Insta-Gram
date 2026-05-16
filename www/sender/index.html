@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insta-Gram</title>
 
-    <script type="module" src="./components/RootPage.js"></script>
+    <script type="module" src="./components/SenderRootPage.js"></script>
     <script type="module" src="./components/AlbumManagerPage.js"></script>
 </head>
 <body>
-    <root-page></root-page>
+    <sender-root-page></sender-root-page>
     <album-manager-page></album-manager-page>
 
     <script>
-        const rootPage = document.querySelector('root-page');
+        const rootPage = document.querySelector('sender-root-page');
         const albumManagerPage = document.querySelector('album-manager-page');
 
         rootPage.addEventListener('createalbum', () => {

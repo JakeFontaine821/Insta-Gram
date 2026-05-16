@@ -4,19 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <script type="module" src="./components/FrameRootPage.js"></script>
 </head>
 <body>
-    Hello
+    <frame-root-page></frame-root-page>
 
     <!-- Include the library via CDN -->
-    <script src="../lib/qrcode.js"></script>
+    <!-- <script src="./lib/qrcode.js"></script> -->
 
     <!-- Container for the QR code -->
-    <div id="qrcode"></div>
+    <!-- <div id="qrcode"></div> -->
 
-    <script>
+    <!-- <script>
         // Basic usage
         new QRCode(document.getElementById("qrcode"), "http://192.168.0.13:8080/sender");
-    </script>
+    </script> -->
 </body>
 </html>
