@@ -26,7 +26,20 @@
             albumManagerPage.classList.add('hidden');
         });
 
-        albumManagerPage.addEventListener('update', () => rootPage.loadAlbums());
+        // Handle Server events
+        const eventSource = new EventSource('/events');
+        eventSource.onerror = (err) => console.error('SSE error:', err);;
+
+        eventSource.onmessage = (event) => {
+            console.log('Received:', JSON.parse(event.data));
+        };
+
+        eventSource.addEventListener('albumreload', () => {
+            rootPage.loadAlbums();
+            albumManagerPage.loadAlbums();
+        });
+
+        // albumManagerPage.addEventListener('update', () => rootPage.loadAlbums());
     </script>
 </body>
 </html>

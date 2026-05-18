@@ -90,12 +90,24 @@ export default class AlbumManagerPage extends HTMLElement{
 
         this.querySelector('.back-button').addEventListener('click', () => this.dispatchEvent(new Event('close')));
 
-        (async () => {
-            const albumResponse = await sendRequest('/sender/albums');
-            if(!albumResponse.success){ return; }
+        this.loadAlbums();
+    };
 
-            for(const entry of albumResponse.entries){ albumList.insertBefore(new EditableAlbumEntry(entry), createNewAlbumButton); }
-        })();
+    async loadAlbums(){
+        const albumResponse = await sendRequest('/sender/albums');
+        if(!albumResponse.success){ return; }
+
+        const albumList = this.querySelector('.list-inner');
+        while(albumList.firstChild){ albumList.firstChild.remove(); }
+
+        // recreate the create button
+        const createButton = document.createElement('div');
+        createButton.innerHTML = `<div class="create-new-album-button">Create New Album<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M444-444H240v-72h204v-204h72v204h204v72H516v204h-72v-204Z"/></svg></div>`;
+        createButton.addEventListener('click', () => albumList.insertBefore(new EditableAlbumEntry(), createButton));
+        albumList.appendChild(createButton);
+
+        // add in the albums
+        for(const entry of albumResponse.entries){ albumList.insertBefore(new EditableAlbumEntry(entry), createButton); }
     };
 };
 customElements.define('album-manager-page', AlbumManagerPage);

@@ -14,6 +14,10 @@ AddStyle(/*css*/`
         background: var(--g);
     }
 
+    .editable-album-entry.error{
+        border: 1px solid #af3333;
+    }
+
     .editable-album-entry .album-info{
         width: 50%;
         display: flex;
@@ -70,7 +74,8 @@ export default class EditableAlbumEntry extends HTMLElement{
         // Save handler for updating the name of album, can only run if its updating
         const saveAlbum = async () => {
             const response = await sendRequest('/sender/albums/rename', { body: { albumId: this.albumObj.albumId, albumName: albumNameInput.value } });
-            if(!response.success){ console.error('Failed to save'); }
+            this.classList.toggle('error', !response.success);
+            if(!response.success){ return console.error('Failed to save'); }
 
             // Reset entries state
             saveButton.setAttribute('disabled', '');
@@ -86,6 +91,7 @@ export default class EditableAlbumEntry extends HTMLElement{
         else{
             const createAlbum = async () => {
                 const response = await sendRequest('/sender/albums/create', { body: { albumName: albumNameInput.value } });
+                this.classList.toggle('error', !response.success);
                 if(!response.success){ return console.error('Failed to create'); }
 
                 // Swap out eventlister createhandler for updatehandler

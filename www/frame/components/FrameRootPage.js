@@ -1,6 +1,12 @@
 import AddStyle from '../js/Styles.js';
+import './LandingPage.js';
 
-AddStyle(``);
+AddStyle(`
+    .frame-root-page{
+        height: 100vh;
+        width: 100vw;
+    }
+`);
 
 export default class FrameRootPage extends HTMLElement{
     constructor(){
@@ -9,7 +15,7 @@ export default class FrameRootPage extends HTMLElement{
         this.classList.add('frame-root-page');
 
         this.innerHTML = `
-            Frame type shit
+            <landing-page></landing-page>
         `;
     };
 };

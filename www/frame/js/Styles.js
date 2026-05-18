@@ -19,7 +19,7 @@ AddStyle(`
         --a: #82729e;
         --b: #c9b0b5;
         --c: #ad9187;
-
+        
         --d: #a7abde;
         --e: #c8ceee;
         --f: #eadaf0;
@@ -32,7 +32,7 @@ AddStyle(`
         margin: 0;
         overflow-x: hidden;
         overflow-y: auto;
-        background-color: var(--background);
+        background-color: var(--f);
         color: var(--text);
         fill: var(--text);
 
