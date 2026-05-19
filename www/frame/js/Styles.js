@@ -40,6 +40,7 @@ AddStyle(`
         font-optical-sizing: auto;
         font-weight: 400;
         font-style: normal;
+        font-size: 4rem;
     }
 
     body *{
