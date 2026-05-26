@@ -40,7 +40,7 @@ AddStyle(`
         font-optical-sizing: auto;
         font-weight: 400;
         font-style: normal;
-        font-size: 4rem;
+        font-size: 2rem;
     }
 
     body *{
@@ -52,9 +52,9 @@ AddStyle(`
         font-optical-sizing: auto;
         font-weight: 400;
         font-style: normal;
-        font-size: 1rem;
+        font-size: 1.75rem;
 
-        height: 20px;
+        height: 45px;
         text-align: center;
         border: 1px solid transparent;
         background-color: var(--background);

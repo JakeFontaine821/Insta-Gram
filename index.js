@@ -7,6 +7,10 @@ const app = express();
 app.use(express.json());
 app.use('/', express.static(path.join(__dirname, './www')));
 
+const { networkInterfaces } = require('os');
+const HOST = Array.from(Object.values(networkInterfaces())).flat().find(net => net.family === 'IPv4' && !net.internal).address;
+const PORT = 3000;
+
 /****************************************************************************************************/
 /*                              SETTING UP IMAGE STORAGE                                            */
 /****************************************************************************************************/
@@ -27,11 +31,15 @@ const upload = multer({
 });
 
 /****************************************************************************************************/
-/*                              FRAME ENDPOINTS                                            */
+/*                                      FRAME ENDPOINTS                                             */
 /****************************************************************************************************/
+const WeatherUtils = require('./api/weatherUtils.js');
 app.get('/', (req, res) => res.json({ success: true, message: "Sending JSON" }));
 
 app.get('/frame', (req, res) => res.sendFile(path.join(__dirname, '/www/frame/index.html')));
+app.get('/frame/host', (req, res) => res.json({ host: HOST, port: PORT }));
+
+app.get('/frame/weather/suggest', async (req, res) => res.json(await WeatherUtils.getWeatherSuggestions(req.query.query)));
 
 /****************************************************************************************************/
 /*                              SENDER SPECIFIC ENDPOINTS                                           */
@@ -114,7 +122,4 @@ function broadcast(event, data={}, sender=null) {
 
 // id | file_path | sent_by | date_added | album_ids
 
-const { networkInterfaces } = require('os');
-const HOST = Array.from(Object.values(networkInterfaces())).flat().find(net => net.family === 'IPv4' && !net.internal).address;
-const PORT = 3000;
 app.listen(PORT, HOST, () => console.log(`Running on port ${HOST}:${PORT}`));
