@@ -1,7 +1,7 @@
 import AddStyle from '../js/Styles.js';
 import { sendRequest } from '../js/utils.js';
 
-AddStyle(`
+AddStyle(/*css*/`
     .set-location-popup{
         height: 100vh;
         width: 100vw;
@@ -35,6 +35,12 @@ AddStyle(`
         overflow-y: auto;
     }
 
+    .set-location-popup .popup-container .lookup-list-inner{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
     .set-location-popup .popup-container .no-suggested-display{
         width: 100%;
         height: 100%;
@@ -43,6 +49,21 @@ AddStyle(`
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .set-location-popup .popup-container .suggested-location{
+        display: flex;
+        justify-content: center;
+        align-items: end;
+        padding: 10px 0 0 0;
+        border: 1px solid var(--accent);
+        border-radius: 10px;
+        cursor: pointer;
+        background: var(--g);
+    }
+
+    .set-location-popup .popup-container .suggested-location .rest{
+        font-size: 1.5rem;
     }
 `);
 
@@ -66,43 +87,45 @@ export default class SetLocationPopup extends HTMLElement{
         const lookupListInner = this.querySelector('.lookup-list-inner');
         const noSuggestedDisplay = this.querySelector('.no-suggested-display');
 
-        locationSearchInput.addEventListener('input', async () => {
+        let suggestTimeout = null;
+        locationSearchInput.addEventListener('input', () => {
             const searchInput = locationSearchInput.value;
             if(searchInput.length < 3){ return this.SwapDisplay(true); }
 
-            // Clear existing entries
-            while(lookupListInner.firstChild){ lookupListInner.firstChild.remove(); }
+            // Clear an existing timout to send an updated one instead
+            if(suggestTimeout){ clearTimeout(suggestTimeout); }
 
-            // Look up new entries for input
-            const searchResponse = await sendRequest(`/frame/weather/suggest?query=${searchInput}`);
-            if(searchResponse.errors){ return this.SwapDisplay(true); }
+            suggestTimeout = setTimeout(async () => {
+                // Clear existing entries
+                while(lookupListInner.firstChild){ lookupListInner.firstChild.remove(); }
 
-            // Prune unwanted locations clean data
-            const suggestedLocations = [];
-            for (let i = 0; i < searchResponse.location.address.length; i++) {
-                if(searchResponse.location.countryCode[i] !== 'US'){ continue; }
+                // Look up new entries for input
+                const searchResponse = await sendRequest('/frame/weather/suggest', { body: { query: encodeURIComponent(searchInput) } });
+                if(!searchResponse.results){ suggestTimeout = null; return this.SwapDisplay(true); }
+                
+                // Create a new divs for suggestions and hookup click listener
+                for(const result of searchResponse.results){
+                    const newDiv = document.createElement('div');
+                    newDiv.classList.add('suggested-location');
+                    newDiv.info = { town: result.name, state: result.admin1, country: result.country, lat: result.latitude, lng: result.longitude };
+                    newDiv.innerHTML = `
+                        <div class="town">${result.name}</div>
+                        <div class="rest">,${result.admin1},${result.country}</div>
+                    `;
 
-                suggestedLocations.push({
-                    town:    searchResponse.location.displayName[i],
-                    state:   searchResponse.location.adminDistrict[i],
-                    country: searchResponse.location.country[i],
-                    lat:     searchResponse.location.latitude[i],
-                    lng:     searchResponse.location.longitude[i]
-                });
-            }
+                    newDiv.addEventListener('click', async () => {
+                        const setWeatherResponse = await sendRequest('/frame/weather/set', { body: { locationInfo: newDiv.info } });
+                        if(!setWeatherResponse.success){ console.error('Failed to set location'); } // TODO display error to user
 
-            // Create Display for suggestions
-            console.log(suggestedLocations)
-            for(const location of suggestedLocations){
-                const newDiv = document.createElement('div');
-                newDiv.classList.add('suggested-location');
-                newDiv.innerHTML = `${location.town},${location.state},${location.country}`;
+                        console.log('Set Location'); //TODO probably close panel and start showing weather
+                    });
 
-                lookupListInner.appendChild(newDiv);
-            }
+                    lookupListInner.appendChild(newDiv);
+                }
 
-            // Swap in the suggestions if there are any
-            this.SwapDisplay(suggestedLocations.length ? false : true);
+                this.SwapDisplay();
+                suggestTimeout = null;
+            }, 500);
         });
     };
 
