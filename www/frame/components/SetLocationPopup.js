@@ -65,6 +65,11 @@ AddStyle(/*css*/`
     .set-location-popup .popup-container .suggested-location .rest{
         font-size: 1.5rem;
     }
+
+    .set-location-popup .popup-container .error-text{
+        color: #aa3333;
+        font-size: 1.5rem;
+    }
 `);
 
 export default class SetLocationPopup extends HTMLElement{
@@ -80,12 +85,14 @@ export default class SetLocationPopup extends HTMLElement{
                     <div class="lookup-list-inner hidden"></div>
                     <div class="no-suggested-display">No suggested locations found</div>
                 </div>
+                <div class="error-text"></div>
             </div>
         `;
 
         const locationSearchInput = this.querySelector('.location-search-input');
         const lookupListInner = this.querySelector('.lookup-list-inner');
         const noSuggestedDisplay = this.querySelector('.no-suggested-display');
+        const errorText = this.querySelector('.error-text');
 
         let suggestTimeout = null;
         locationSearchInput.addEventListener('input', () => {
@@ -115,9 +122,16 @@ export default class SetLocationPopup extends HTMLElement{
 
                     newDiv.addEventListener('click', async () => {
                         const setWeatherResponse = await sendRequest('/frame/weather/set', { body: { locationInfo: newDiv.info } });
-                        if(!setWeatherResponse.success){ console.error('Failed to set location'); } // TODO display error to user
 
-                        console.log('Set Location'); //TODO probably close panel and start showing weather
+                        if(!setWeatherResponse.success){
+                            console.error('Failed to set location', setWeatherResponse.error);
+                            errorText.innerHTML = 'Failed to set location';
+                            return;
+                        }
+
+                        errorText.innerHTML = '';
+                        this.dispatchEvent(new Event('locationset'));
+                        this.classList.add('hidden');
                     });
 
                     lookupListInner.appendChild(newDiv);

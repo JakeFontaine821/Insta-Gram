@@ -39,7 +39,6 @@ AddStyle(/*css*/`
         justify-content: center;
 
         background: var(--background);
-        border: 1px solid var(--text);
         border-radius: 20px;
     }
 
@@ -130,9 +129,45 @@ AddStyle(/*css*/`
     /********************************* WEATHER BUTTON ******************************/
     .landing-page .weather-button{
         background-color: #87CEEB;
+        text-align: center;
+        transition: background-color 1s, color 1s;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .landing-page .weather-button.night{
+        background-color: #131862;
+        color: var(--g);
+    }
+
+    .landing-page .weather-button > div{
+        display: flex;
+        width: 100%;
+    }
+
+    .landing-page .weather-button .top{
+        flex: 1;
+    }
+
+    .landing-page .weather-button .top > div{
+        flex: 1;
+    }
+
+    .landing-page .weather-button .top .current-temp{
+        font-size: 6rem;
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .landing-page .weather-button .top .forecast{
+        padding: 0px;
+    }
+
+    .landing-page .weather-button .bottom{
+        font-size: 2.5rem;
+        justify-content: space-evenly;
+        padding: 10px 0;
     }
 `);
 
@@ -153,7 +188,7 @@ export default class LandingPage extends HTMLElement{
                 <div class="top">
 
                     <div class="button weather-button">
-                        Set Location
+                        Getting Weather Information
                     </div>
 
                     <div class="button calender-button">
@@ -193,7 +228,9 @@ export default class LandingPage extends HTMLElement{
             <set-location-popup></set-location-popup>
         `;
 
-        // Clock Button
+        /***************************************************************************************/
+        /*                              CLOCK BUTTON                                           */
+        /***************************************************************************************/
         const clockButton = this.querySelector('.clock-button');
         clockButton.addEventListener('click', () => clockButton.classList.toggle('shift'));
 
@@ -221,25 +258,48 @@ export default class LandingPage extends HTMLElement{
         setTime();
         setInterval(setTime, 1000);
 
-        (async () => {
-            // const gridPoint = await sendRequest(`https://api.weather.gov/points/${43.97947500053334},${-71.120682}`);
-            // console.log(gridPoint);
-            // const properties = gridPoint.properties;
-            // console.log(properties)
-            // const forcast = await sendRequest(`https://api.weather.gov/gridpoints/${properties.gridId}/${properties.gridX},${properties.gridY}/forecast`);
-            // console.log(forcast);
-
-            // const apiKey = '71f92ea9dd2f4790b92ea9dd2f779061';
-            // const typedQuery = 'Dighton';
-            // const a = await sendRequest(`https://api.weather.com/v3/location/search?query=${typedQuery}&language=en-US&format=json&apiKey=${apiKey}&locationType=city%2Clocality%2Cneighborhood%2Cpostal%2Cairport%2Caddress`)
-            // console.log(a)
-        })();
-
+        /***************************************************************************************/
+        /*                              WEATHER BUTTON                                         */
+        /***************************************************************************************/
         const weatherButton = this.querySelector('.weather-button');
         const setLocationPopup = this.querySelector('.set-location-popup');
         weatherButton.addEventListener('click', () => setLocationPopup.classList.remove('hidden'));
-    };
 
-    
+        const loadWeather = async () => {
+            weatherButton.classList.add('loading');
+            const weatherResponse = await sendRequest('/frame/weather');
+
+            if(!weatherResponse.success){ // Failed to get info, display to user and try again in a minute
+                weatherButton.innerHTML = 'Failed to get weather information';
+                setTimeout(loadWeather, 60000);
+
+                return weatherButton.classList.remove('loading');
+            }
+
+            console.log(weatherResponse);
+            weatherButton.innerHTML = `
+                <div class="top">
+                    <div class="current-temp">${weatherResponse.data.temperature}°</div>
+                    <div class="forecast">
+                        <div class="word">${weatherResponse.data.forecast}</div>
+                        <div class="icon">Icon Here:)</div>
+                    </div>
+                </div>
+                <div class="bottom">
+                    <div class="max-temp">Max: ${weatherResponse.data.maxTemperature}°</div>
+                    <div class="min-temp">Min: ${weatherResponse.data.minTemperature}°</div>
+                </div>
+            `;
+
+            weatherButton.classList.toggle('night', !weatherResponse.data.isDaytime);
+            weatherButton.classList.remove('loading');
+
+            // Load weather again in an hour to keep up to date :)
+            setTimeout(loadWeather, 3600000);
+        };
+
+        setLocationPopup.addEventListener('locationset', loadWeather);
+        loadWeather();
+    };
 };
 customElements.define('landing-page', LandingPage);
