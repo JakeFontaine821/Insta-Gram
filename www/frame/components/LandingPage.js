@@ -287,6 +287,12 @@ export default class LandingPage extends HTMLElement{
 
         setLocationPopup.addEventListener('locationset', loadWeather);
         loadWeather();
+
+        /***************************************************************************************/
+        /*                              SETTINGS BUTTON                                        */
+        /***************************************************************************************/
+        const settingsButton = this.querySelector('.settings-button');
+        settingsButton.addEventListener('click', () => this.dispatchEvent(new Event('settings')));
     };
 };
 customElements.define('landing-page', LandingPage);

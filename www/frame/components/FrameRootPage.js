@@ -1,5 +1,6 @@
 import AddStyle from '../js/Styles.js';
 import './LandingPage.js';
+import './SettingsPage.js';
 
 AddStyle(`
     .frame-root-page{
@@ -16,7 +17,18 @@ export default class FrameRootPage extends HTMLElement{
 
         this.innerHTML = `
             <landing-page></landing-page>
+            <settings-page></settings-page>
         `;
+
+        const landingPage = this.querySelector('.landing-page');
+        const settingsPage = this.querySelector('.settings-page');
+        const swapPages = (settings=false) => {
+            landingPage.classList.toggle('hidden', settings);
+            settingsPage.classList.toggle('hidden', !settings);
+        };
+
+        landingPage.addEventListener('settings', () => swapPages(true));
+        settingsPage.addEventListener('close', () => swapPages(false));
     };
 };
 customElements.define('frame-root-page', FrameRootPage);

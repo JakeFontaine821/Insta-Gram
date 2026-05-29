@@ -24,8 +24,27 @@ AddStyle(/*css*/`
         gap: 10px;
     }
 
-    .set-location-popup .popup-container input{
+    .set-location-popup .popup-container .top-row{
+        display: flex;
         width: 100%;
+        gap: 5px;
+    }
+
+    .set-location-popup .popup-container .back-button{
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--primary);
+        border-radius: 20px;
+        padding: 5px 10px 5px 5px;
+        font-size: 1.5rem;
+    }
+
+    .set-location-popup .popup-container .back-button div{
+        padding-top: 4px;
+    }
+
+    .set-location-popup .popup-container input{
+        flex: 1;
         border: 1px solid var(--primary);
         border-radius: 20px;
     }
@@ -79,9 +98,15 @@ export default class SetLocationPopup extends HTMLElement{
 
         this.classList.add('set-location-popup', 'hidden');
 
-        this.innerHTML = `
+        this.innerHTML = /*html*/`
             <div class="popup-container">
-                <input class="location-search-input" placeholder="Search for City or Town" />
+                <div class="top-row">
+                    <div class="back-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px"><path d="M624-96 240-480l384-384 68 68-316 316 316 316-68 68Z"/></svg>
+                        <div>Back</div>
+                    </div>
+                    <input class="location-search-input" placeholder="Search for City or Town" />
+                </div>
                 <div class="lookup-list-outer">
                     <div class="lookup-list-inner hidden"></div>
                     <div class="no-suggested-display">No suggested locations found</div>
@@ -90,6 +115,11 @@ export default class SetLocationPopup extends HTMLElement{
             </div>
         `;
 
+        // Back button
+        const backButton = this.querySelector('.back-button');
+        backButton.addEventListener('click', () => this.classList.add('hidden'));
+
+        // Set up location search and selection
         const locationSearchInput = this.querySelector('.location-search-input');
         const lookupListInner = this.querySelector('.lookup-list-inner');
         const noSuggestedDisplay = this.querySelector('.no-suggested-display');
