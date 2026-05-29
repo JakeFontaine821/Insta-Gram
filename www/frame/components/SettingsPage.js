@@ -36,6 +36,7 @@ export default class SettingsPage extends HTMLElement{
                 </div>
                 <div class="about-tab">about</div>
                 <div class="wifi-tab">wifi</div>
+                <div class="storage-tab">storage</div>
                 <div class="credits-tab">credits</div>
             </div>
             <div class="panels">
