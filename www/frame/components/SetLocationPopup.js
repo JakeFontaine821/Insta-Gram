@@ -17,6 +17,7 @@ AddStyle(/*css*/`
         width: 40vw;
         padding: 20px;
         background-color: var(--background);
+        border-radius: 30px;
         display: flex;
         flex-direction: column;
         align-items: center;

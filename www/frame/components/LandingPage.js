@@ -86,19 +86,7 @@ AddStyle(/*css*/`
 
     /********************************* SETTINGS BUTTON ******************************/
     .landing-page .settings-button{
-        height: calc(100% - 6px);
-        aspect-ratio: 1;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        font-size: 3rem;
-        background-image: repeating-linear-gradient( 135deg, #ccc, #777);
-    }
-
-    .landing-page .settings-button svg{
-        flex: .8;
+        background-color: #9c9c9c;
     }
 
     /********************************* CALENDER BUTTON ******************************/
@@ -154,7 +142,7 @@ AddStyle(/*css*/`
     }
 
     .landing-page .weather-button .top .current-temp{
-        font-size: 6rem;
+        font-size: 8rem;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -218,8 +206,7 @@ export default class LandingPage extends HTMLElement{
                     </div>
 
                     <div class="button settings-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"/></svg>
-                        Settings
+                        <svg viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#eadaf0"/><stop offset="100%" stop-color="#a7abde"/></linearGradient><filter id="a" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-opacity=".08"/></filter></defs><g filter="url(#a)" transform="translate(57 32)"><path d="M56 0c5 0 9 4 9 9v10c5 2 9 4 13 7l9-9c4-4 10-4 14 0l10 10c4 4 4 10 0 14l-9 9c3 4 5 8 7 13h10c5 0 9 4 9 9v14c0 5-4 9-9 9h-10c-2 5-4 9-7 13l9 9c4 4 4 10 0 14l-10 10c-4 4-10 4-14 0l-9-9c-4 3-8 5-13 7v10c0 5-4 9-9 9H42c-5 0-9-4-9-9v-10c-5-2-9-4-13-7l-9 9c-4 4-10 4-14 0l-10-10c-4-4-4-10 0-14l9-9c-3-4-5-8-7-13h-10c-5 0-9-4-9-9V72c0-5 4-9 9-9h10c2-5 4-9 7-13l-9-9c-4-4-4-10 0-14l10-10c4-4 10-4 14 0l9 9c4-3 8-5 13-7V9c0-5 4-9 9-9z" fill="url(#b)"/><circle cx="49" cy="79" r="33" fill="#82729e"/><circle cx="49" cy="79" r="28" fill="#9c9c9c"/></g><g filter="url(#a)" transform="matrix(.75 0 0 .75 138 108)"><path d="M56 0c5 0 9 4 9 9v10c5 2 9 4 13 7l9-9c4-4 10-4 14 0l10 10c4 4 4 10 0 14l-9 9c3 4 5 8 7 13h10c5 0 9 4 9 9v14c0 5-4 9-9 9h-10c-2 5-4 9-7 13l9 9c4 4 4 10 0 14l-10 10c-4 4-10 4-14 0l-9-9c-4 3-8 5-13 7v10c0 5-4 9-9 9H42c-5 0-9-4-9-9v-10c-5-2-9-4-13-7l-9 9c-4 4-10 4-14 0l-10-10c-4-4-4-10 0-14l9-9c-3-4-5-8-7-13h-10c-5 0-9-4-9-9V72c0-5 4-9 9-9h10c2-5 4-9 7-13l-9-9c-4-4-4-10 0-14l10-10c4-4 10-4 14 0l9 9c4-3 8-5 13-7V9c0-5 4-9 9-9z" fill="url(#b)"/><circle cx="49" cy="79" r="33" fill="#82729e"/><circle cx="49" cy="79" r="28" fill="#9c9c9c"/></g></svg>
                     </div>
 
                 </div>
@@ -286,8 +273,8 @@ export default class LandingPage extends HTMLElement{
                     </div>
                 </div>
                 <div class="bottom">
-                    <div class="max-temp">Max: ${weatherResponse.data.maxTemperature}°</div>
-                    <div class="min-temp">Min: ${weatherResponse.data.minTemperature}°</div>
+                    <div class="max-temp">H:${weatherResponse.data.maxTemperature}°</div>
+                    <div class="min-temp">L:${weatherResponse.data.minTemperature}°</div>
                 </div>
             `;
 
