@@ -2,6 +2,7 @@ import AddStyle from '../js/Styles.js';
 import { sendRequest } from '../js/utils.js';
 
 import './SetLocationPopup.js';
+import './SettingsPopup.js';
 
 AddStyle(/*css*/`
     /********************************* WHOLE PAGE ******************************/
@@ -213,6 +214,7 @@ export default class LandingPage extends HTMLElement{
             </div>
 
             <set-location-popup></set-location-popup>
+            <settings-popup></settings-popup>
         `;
 
         /***************************************************************************************/
@@ -292,7 +294,8 @@ export default class LandingPage extends HTMLElement{
         /*                              SETTINGS BUTTON                                        */
         /***************************************************************************************/
         const settingsButton = this.querySelector('.settings-button');
-        settingsButton.addEventListener('click', () => this.dispatchEvent(new Event('settings')));
+        const settingsPopup = this.querySelector('.settings-popup');
+        settingsButton.addEventListener('click', () => settingsPopup.classList.remove('hidden'));
     };
 };
 customElements.define('landing-page', LandingPage);
