@@ -20,6 +20,8 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Linux
     echo "Linux detected."
 
+    LOCAL_IP=$(hostname -I | awk '{print $1}')
+
     chromium --new-window http://$LOCAL_IP:3000/frame #--kiosk
     # chromium --new-window --app=http://localhost:3000 --start-fullscreen
 
