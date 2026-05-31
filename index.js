@@ -31,7 +31,7 @@ const upload = multer({
 });
 
 /****************************************************************************************************/
-/*                                      FRAME ENDPOINTS                                             */
+/*                                   IMPORT HELPER MODULES                                          */
 /****************************************************************************************************/
 const WeatherUtils = require('./api/weatherUtils.js');
 const SettingsUtils = require('./api/SettingsUtils.js');
@@ -40,7 +40,7 @@ const AlbumDatabaseManager = require(path.join(__dirname, '/api/albumDatabaseMan
 const ImageDatabaseManager = require(path.join(__dirname, '/api/imageDatabaseManager.js'));
 
 /****************************************************************************************************/
-/*                                   IMPORT HELPER MODULES                                          */
+/*                                      FRAME ENDPOINTS                                             */
 /****************************************************************************************************/
 app.get('/', (req, res) => res.json({ success: true, message: "Sending JSON" }));
 
