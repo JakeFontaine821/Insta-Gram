@@ -40,9 +40,16 @@ app.get('/', (req, res) => res.json({ success: true, message: "Sending JSON" }))
 app.get('/frame', (req, res) => res.sendFile(path.join(__dirname, '/www/frame/index.html')));
 app.get('/frame/host', (req, res) => res.json({ host: HOST, port: PORT }));
 
+// Weather
 app.get('/frame/weather', async (req, res) => res.json(await WeatherUtils.getWeatherData()));
 app.post('/frame/weather/set', async (req, res) => res.json(await LocationDatabaseManager.setLocation(req.body.locationInfo)));
 app.post('/frame/weather/suggest', async (req, res) => res.json(await WeatherUtils.getWeatherSuggestions(req.body.query)));
+
+// Wifi Settings
+// https://github.com/friedrith/node-wifi
+
+// Storage Display
+// https://www.npmjs.com/package/diskusage
 
 /****************************************************************************************************/
 /*                              SENDER SPECIFIC ENDPOINTS                                           */
