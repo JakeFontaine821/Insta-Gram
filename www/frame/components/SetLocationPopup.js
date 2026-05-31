@@ -34,9 +34,9 @@ AddStyle(/*css*/`
         display: flex;
         align-items: center;
         border: 1px solid var(--primary);
-        border-radius: 20px;
+        border-radius: 35px;
         padding: 10px 20px 10px 15px;
-        height: 65px;
+        height: 70px;
     }
 
     .set-location-popup .popup-container .back-button div{
@@ -46,9 +46,9 @@ AddStyle(/*css*/`
     .set-location-popup .popup-container input{
         flex: 1;
         border: 1px solid var(--primary);
-        border-radius: 20px;
+        border-radius: 35px;
         font-size: 2.5rem;
-        height: 65px;
+        height: 70px;
     }
 
     .set-location-popup .popup-container .lookup-list-outer{

@@ -8,7 +8,7 @@ app.use(express.json());
 app.use('/', express.static(path.join(__dirname, './www')));
 
 const { networkInterfaces } = require('os');
-const HOST = Array.from(Object.values(networkInterfaces())).flat().find(net => net.family === 'IPv4' && !net.internal).address;
+const HOST = Array.from(Object.values(networkInterfaces())).flat().find(net => net.family === 'IPv4' && !net.internal)?.address ?? 'localhost';
 const PORT = 3000;
 
 /****************************************************************************************************/
@@ -34,7 +34,14 @@ const upload = multer({
 /*                                      FRAME ENDPOINTS                                             */
 /****************************************************************************************************/
 const WeatherUtils = require('./api/weatherUtils.js');
+const SettingsUtils = require('./api/SettingsUtils.js');
 const LocationDatabaseManager = require('./api/locationDatabaseManager.js');
+const AlbumDatabaseManager = require(path.join(__dirname, '/api/albumDatabaseManager.js'));
+const ImageDatabaseManager = require(path.join(__dirname, '/api/imageDatabaseManager.js'));
+
+/****************************************************************************************************/
+/*                                   IMPORT HELPER MODULES                                          */
+/****************************************************************************************************/
 app.get('/', (req, res) => res.json({ success: true, message: "Sending JSON" }));
 
 app.get('/frame', (req, res) => res.sendFile(path.join(__dirname, '/www/frame/index.html')));
@@ -46,10 +53,22 @@ app.post('/frame/weather/set', async (req, res) => res.json(await LocationDataba
 app.post('/frame/weather/suggest', async (req, res) => res.json(await WeatherUtils.getWeatherSuggestions(req.body.query)));
 
 // Wifi Settings
+// SettingsUtils.getWifiNetworks();
+// const wifi = require('node-wifi');
+// wifi.init({ iface: null });
+// (async () => {
+//     const response = await wifi.scan();
+//     console.log('response', response)
+// })();
+
 // https://github.com/friedrith/node-wifi
+app.get('/frame/wifi', async () => {});
+app.post('/frame/wifi/set', async () => {});
 
 // Storage Display
 // https://www.npmjs.com/package/diskusage
+app.get('/frame/storage', async (req, res) => res.json(await SettingsUtils.getStorage()));
+app.get('/frame/storage/count', async (req, res) => res.json(await ImageDatabaseManager.totalImageCount()));
 
 /****************************************************************************************************/
 /*                              SENDER SPECIFIC ENDPOINTS                                           */
@@ -57,8 +76,6 @@ app.post('/frame/weather/suggest', async (req, res) => res.json(await WeatherUti
 app.get('/sender', (req, res) => res.sendFile(path.join(__dirname, '/www/sender/index.html')));
 
 // Albums
-const AlbumDatabaseManager = require(path.join(__dirname, '/api/albumDatabaseManager.js'));
-const ImageDatabaseManager = require(path.join(__dirname, '/api/imageDatabaseManager.js'));
 app.get('/sender/albums', (req, res) => res.json(AlbumDatabaseManager.getAllAlbums()));
 
 app.get('/sender/album', (req, res) => {

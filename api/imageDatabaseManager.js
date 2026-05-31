@@ -26,7 +26,14 @@ function addImage(metaData){
     return { success: true };
 };
 
+const getAllImagesCount = db.prepare(`SELECT COUNT(*) FROM imageMetadata`);
+function totalImageCount(){
+    const count = getAllImagesCount.get();
+    return { success: true, count };
+};
+
 module.exports = {
     getAllImages,
     addImage,
+    totalImageCount
 };

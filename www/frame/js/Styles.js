@@ -5,7 +5,7 @@ document.querySelector('head').appendChild(styleNode);
 const AddStyle = styleNode.styleSheet ? style => styleNode.styleSheet.cssText += style : style => styleNode.appendChild(document.createTextNode(style));
 export default AddStyle;
 
-AddStyle(`
+AddStyle(/*css*/`
     /************************** GLOBAL STYLES **************************/
     @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 

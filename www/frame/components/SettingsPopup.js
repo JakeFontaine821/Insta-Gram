@@ -1,4 +1,5 @@
 import AddStyle from '../js/Styles.js';
+import { sendRequest } from '../js/utils.js';
 
 AddStyle(/*css*/`
     .settings-popup{
@@ -12,8 +13,8 @@ AddStyle(/*css*/`
     }
 
     .settings-popup .popup-container{
-        height: 50vh;
-        width: 50vw;
+        height: 70vh;
+        width: 60vw;
         background-color: var(--background);
         border-radius: 30px;
         display: flex;
@@ -32,17 +33,17 @@ AddStyle(/*css*/`
 
     .settings-popup .popup-container .back-tab{
         padding: 10px;
-        border-right: 1px solid var(--accent);
+        border-right: 2px solid var(--accent);
     }
 
     .settings-popup .popup-container .back-button{
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid var(--primary);
+        border: 2px solid var(--primary);
         border-radius: 20px;
         padding: 5px 10px 5px 5px;
-        font-size: 1.5rem;
+        font-size: 2rem;
     }
 
     .settings-popup .popup-container .back-button div{
@@ -53,27 +54,58 @@ AddStyle(/*css*/`
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 10px;
-        border-top: 1px solid var(--accent);
-        border-right: 1px solid var(--accent);
+        padding: 20px;
+        border-top: 2px solid var(--accent);
+        border-right: 2px solid var(--accent);
     }
 
     .settings-popup .popup-container > .tabs > .tab.selected{
-        border-right: 1px solid transparent
+        border-right: 2px solid transparent
     }
 
     .settings-popup .popup-container > .tabs > .last{
-        border-bottom: 1px solid var(--accent);
+        border-bottom: 2px solid var(--accent);
     }
 
     .settings-popup .popup-container > .tabs > .empty{
-        border-top: 1px solid transparent;
-        border-right: 1px solid var(--accent);
+        border-top: 2px solid transparent;
+        border-right: 2px solid var(--accent);
         flex: 1;
     }
 
     .settings-popup .popup-container > .panels{
         flex: 3;
+    }
+
+    .settings-popup .popup-container > .panels > div{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 20px 0;
+        text-align: center;
+        font-size: 1.75rem;
+    }
+
+    .settings-popup .popup-container .storage-panel > .bar{
+        width: 100%;
+        height: 30px;
+        padding: 0 20px;
+        position: relative;
+    }
+
+    .settings-popup .popup-container .storage-panel .fill{
+        position: absolute;
+        top: 0;
+        height: 100%;
+        background-color: var(--accent);
+    }
+
+    .settings-popup .popup-container .storage-panel .background{
+        width: 100%;
+        height: 100%;
+        background-color: #efefef;
+        border: 1px solid black;
     }
 `);
 
@@ -99,9 +131,21 @@ export default class SettingsPopup extends HTMLElement{
                     <div class="empty"></div>
                 </div>
                 <div class="panels">
-                    <div class="about-panel">About panel</div>
+                    <div class="about-panel">
+                        <div>Insta-Gram is a digital picture frame made inspite of all the frames my grandmother has tried in the past</div>
+                        <div>We've had very poor luck with all frames encountering serious issues</div>
+                        <div>Finally I thought, I can build a better one, so I did. Hope you enjoy :)</div>
+                    </div>
                     <div class="wifi-panel hidden">wifi panel</div>
-                    <div class="storage-panel hidden">storage panel</div>
+                    <div class="storage-panel hidden">
+                        <div class="bar">
+                            <div class="background"></div>
+                            <div class="fill"></div>
+                        </div>
+                        <div class="used"></div>
+                        <div class="free"></div>
+                        <div class="estimate"></div>
+                    </div>
                     <div class="credits-panel hidden">credits panel</div>
                 </div>
             </div>
@@ -122,6 +166,20 @@ export default class SettingsPopup extends HTMLElement{
                 this.querySelector(`.panels .${tab.getAttribute('panel')}`).classList.remove('hidden');
             });
         }
+
+        (async () => {
+            const storageResponse = await sendRequest('/frame/storage');
+            const free = storageResponse.data.free / 1000000000;
+            const total = storageResponse.data.total / 1000000000;
+
+            const imageCountResponse = await sendRequest('/frame/storage/count');
+            console.log(imageCountResponse.count["COUNT(*)"])
+
+            this.querySelector('.storage-panel .bar .fill').style.width = `${(free / total) * 100}%`;
+            this.querySelector('.storage-panel .used').innerHTML = `You've used ${Math.round(total - free)}gb of storage`;
+            this.querySelector('.storage-panel .free').innerHTML = `There is ${Math.round(free)} remaining`;
+            this.querySelector('.storage-panel .estimate').innerHTML = ``;
+        })();
     };
 };
 customElements.define('settings-popup', SettingsPopup);
