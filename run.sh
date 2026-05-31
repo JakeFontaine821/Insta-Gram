@@ -20,7 +20,8 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Linux
     echo "Linux detected."
 
-    google-chrome --new-window --app=http://localhost:3000 --start-fullscreen
+    chromium --new-window --app="http://$LOCAL_IP:3000/frame" --kiosk
+    # chromium --new-window --app=http://localhost:3000 --start-fullscreen
 
 else
     echo "Unknown OS: $OSTYPE"
