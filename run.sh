@@ -20,7 +20,7 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Linux
     echo "Linux detected."
 
-    chromium --new-window --app="http://$LOCAL_IP:3000/frame" #--kiosk
+    chromium --new-window http://$LOCAL_IP:3000/frame #--kiosk
     # chromium --new-window --app=http://localhost:3000 --start-fullscreen
 
 else
