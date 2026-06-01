@@ -1,5 +1,5 @@
 import AddStyle from '../js/Styles.js';
-import { sendRequest } from '../js/utils.js';
+import { sendRequest, WeatherToIcon } from '../js/utils.js';
 
 import './SetLocationPopup.js';
 import './SettingsPopup.js';
@@ -117,16 +117,22 @@ AddStyle(/*css*/`
 
     /********************************* WEATHER BUTTON ******************************/
     .landing-page .weather-button{
-        background-color: #87CEEB;
         text-align: center;
         transition: background-color 1s, color 1s;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        font-size: 2.75rem;
+
+        color: var(--text);
+        background-color: #87CEEB;
+        text-shadow: 0px 0px 5px #87CEEB;
     }
 
     .landing-page .weather-button.night{
-        background-color: #131862;
         color: var(--g);
+        background-color: #131862;
+        text-shadow: 0px 0px 5px #131862;
     }
 
     .landing-page .weather-button > div{
@@ -135,26 +141,31 @@ AddStyle(/*css*/`
     }
 
     .landing-page .weather-button .top{
+        justify-content: space-evenly;
+        padding: 15px 0;
+    }
+
+    .landing-page .weather-button .middle{
         flex: 1;
+        position: relative;
     }
 
-    .landing-page .weather-button .top > div{
-        flex: 1;
+    .landing-page .weather-button .middle .current-temp{
+        position: absolute;
+        bottom: 0;
+        left: 10%;
+        font-size: 10.5rem;
+        z-index: 2;
     }
 
-    .landing-page .weather-button .top .current-temp{
-        font-size: 8rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .landing-page .weather-button .top .forecast{
-        padding: 0px;
+    .landing-page .weather-button .middle .icon{
+        position: absolute;
+        top: -20%;
+        right: 0;
+        width: 70%;
     }
 
     .landing-page .weather-button .bottom{
-        font-size: 2.5rem;
         justify-content: space-evenly;
         padding: 10px 0;
     }
@@ -268,11 +279,11 @@ export default class LandingPage extends HTMLElement{
             console.log(weatherResponse);
             weatherButton.innerHTML = `
                 <div class="top">
+                    <div class="word">${weatherResponse.data.forecast}</div>
+                </div>
+                <div class="middle">
                     <div class="current-temp">${weatherResponse.data.temperature}°</div>
-                    <div class="forecast">
-                        <div class="word">${weatherResponse.data.forecast}</div>
-                        <div class="icon">Icon Here:)</div>
-                    </div>
+                    <div class="icon">${WeatherToIcon(weatherResponse.data.forecast, weatherResponse.data.isDaytime)}</div>
                 </div>
                 <div class="bottom">
                     <div class="max-temp">H:${weatherResponse.data.maxTemperature}°</div>
