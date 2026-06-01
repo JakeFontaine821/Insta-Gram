@@ -154,7 +154,7 @@ AddStyle(/*css*/`
         position: absolute;
         bottom: 0;
         left: 10%;
-        font-size: 10.5rem;
+        font-size: 2em;
         z-index: 2;
     }
 
