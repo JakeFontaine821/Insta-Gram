@@ -36,6 +36,7 @@ const upload = multer({
 const WeatherUtils = require('./api/weatherUtils.js');
 const SettingsUtils = require('./api/SettingsUtils.js');
 const LocationDatabaseManager = require('./api/locationDatabaseManager.js');
+const { json } = require('stream/consumers');
 const AlbumDatabaseManager = require(path.join(__dirname, '/api/albumDatabaseManager.js'));
 const ImageDatabaseManager = require(path.join(__dirname, '/api/imageDatabaseManager.js'));
 
@@ -113,6 +114,14 @@ app.post('/sender/photo/save', upload.single('imageFile'), (req, res) => {
     if (!metadata.sentBy) { return res.json({ success: false, error: 'Missing required field: \'sentBy\'' }); }
     if (!metadata.albumIds) { return res.json({ success: false, error: 'Missing required field: \'albumIds\'' }); }
     if (!metadata.dateAdded) { return res.json({ success: false, error: 'Missing required field: \'dateAdded\'' }); }
+    
+    // TODO INCRIMENT ALBUM COUNTS
+    const parsedAlbumIds = JSON.parse(metadata.albumIds);
+    for(const albumId of parsedAlbumIds){
+        const incremenetResponse = AlbumDatabaseManager.incrementPhotoCount(albumId);
+        if(!incremenetResponse.success){ continue; }
+        broadcast('albumcount', { albumId, count: incremenetResponse.count });
+    }
     
     return res.json(ImageDatabaseManager.addImage(Object.assign(metadata, { filePath: req.file.path })));
 });

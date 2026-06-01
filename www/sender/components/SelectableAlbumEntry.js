@@ -61,7 +61,7 @@ export default class SelectableAlbumEntry extends HTMLElement{
     constructor(albumObj){
         super();
 
-        this.classList.add('selectable-album-entry');
+        this.classList.add('selectable-album-entry', albumObj.albumId);
         this.albumObj = albumObj;
 
         this.innerHTML = /*html*/`
@@ -76,6 +76,10 @@ export default class SelectableAlbumEntry extends HTMLElement{
         const saveButton = this.querySelector('.save-button');
 
         this.addEventListener('click', () => this.classList.toggle('selected'));
+    };
+
+    updateCount(count){
+        this.querySelector('.album-photo-count').innerHTML = count;
     };
 
     get id(){

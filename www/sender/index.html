@@ -39,6 +39,12 @@
             albumManagerPage.loadAlbums();
         });
 
+        eventSource.addEventListener('albumcount', ({data}) => {
+            const albumData = JSON.parse(data);
+            const albumEntries = document.querySelectorAll(`.${albumData.albumId}`);
+            for(const entry of albumEntries){ entry.updateCount(albumData.count); }
+        });
+
         // albumManagerPage.addEventListener('update', () => rootPage.loadAlbums());
     </script>
 </body>

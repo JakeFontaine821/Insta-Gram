@@ -54,6 +54,7 @@ export default class EditableAlbumEntry extends HTMLElement{
 
         this.classList.add('editable-album-entry');
         this.albumObj = albumObj ?? {};
+        if(this.albumObj){ this.classList.add(this.albumObj.albumId); }
 
         this.innerHTML = /*html*/`
             <div class="album-info">
@@ -108,6 +109,10 @@ export default class EditableAlbumEntry extends HTMLElement{
 
             saveButton.addEventListener('click', createAlbum);
         }
+    };
+
+    updateCount(count){
+        this.querySelector('.album-photo-count').innerHTML = count;
     };
 
     get albumId(){

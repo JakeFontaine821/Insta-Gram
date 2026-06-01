@@ -131,12 +131,15 @@ export default class SettingsPopup extends HTMLElement{
                     <div class="empty"></div>
                 </div>
                 <div class="panels">
+
                     <div class="about-panel">
                         <div>Insta-Gram is a digital picture frame made inspite of all the frames my grandmother has tried in the past</div>
                         <div>We've had very poor luck with all frames encountering serious issues</div>
                         <div>Finally I thought, I can build a better one, so I did. Hope you enjoy :)</div>
                     </div>
+
                     <div class="wifi-panel hidden">wifi panel</div>
+
                     <div class="storage-panel hidden">
                         <div class="bar">
                             <div class="background"></div>
@@ -146,7 +149,14 @@ export default class SettingsPopup extends HTMLElement{
                         <div class="free"></div>
                         <div class="estimate"></div>
                     </div>
-                    <div class="credits-panel hidden">credits panel</div>
+
+                    <div class="credits-panel hidden">
+                        <div>All Hardware and assembly was done by Jake :)</div>
+                        <div>All Software for the application was written by Jake :)</div>
+                        <div>Building the frame was contributed by TODO</div>
+                        <div>"Insta-Gram" was coined by Jason :)</div>
+                    </div>
+
                 </div>
             </div>
         `;
@@ -167,19 +177,21 @@ export default class SettingsPopup extends HTMLElement{
             });
         }
 
-        (async () => {
-            const storageResponse = await sendRequest('/frame/storage');
-            const free = storageResponse.data.free / 1000000000;
-            const total = storageResponse.data.total / 1000000000;
+        this.loadStoragePanel();
+    };
 
-            const imageCountResponse = await sendRequest('/frame/storage/count');
-            console.log(imageCountResponse.count["COUNT(*)"])
+    async loadStoragePanel(){
+        const storageResponse = await sendRequest('/frame/storage');
+        const free = storageResponse.data.free / 1000000000; // converting bytes to gigabytes
+        const total = storageResponse.data.total / 1000000000; // converting bytes to gigabytes
 
-            this.querySelector('.storage-panel .bar .fill').style.width = `${(free / total) * 100}%`;
-            this.querySelector('.storage-panel .used').innerHTML = `You've used ${Math.round(total - free)}gb of storage`;
-            this.querySelector('.storage-panel .free').innerHTML = `There is ${Math.round(free)} remaining`;
-            this.querySelector('.storage-panel .estimate').innerHTML = ``;
-        })();
+        const imageCountResponse = await sendRequest('/frame/storage/count');
+        const photoCount = imageCountResponse.count["COUNT(*)"];
+
+        this.querySelector('.storage-panel .bar .fill').style.width = `${(free / total) * 100}%`;
+        this.querySelector('.storage-panel .used').innerHTML = `You've used ${Math.round(total - free)}gb of storage`;
+        this.querySelector('.storage-panel .free').innerHTML = `There is ${Math.round(free)}gb remaining`;
+        this.querySelector('.storage-panel .estimate').innerHTML = photoCount ? `You can add about ${Math.round((total / free) * photoCount)} more photos` : '';
     };
 };
 customElements.define('settings-popup', SettingsPopup);

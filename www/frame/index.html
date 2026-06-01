@@ -16,5 +16,29 @@
         // Basic usage
         new QRCode(document.getElementById("qrcode"), "http://192.168.0.12:3000/sender");
     </script> -->
+
+    <script>
+        // Handle Server events
+        const eventSource = new EventSource('/events');
+        eventSource.onerror = (err) => console.error('SSE error:', err);;
+
+        eventSource.onmessage = (event) => {
+            console.log('Received:', JSON.parse(event.data));
+        };
+
+        // TODO
+        // eventSource.addEventListener('albumreload', () => {
+        //     rootPage.loadAlbums();
+        //     albumManagerPage.loadAlbums();
+        // });
+
+        // eventSource.addEventListener('albumcount', ({data}) => {
+        //     const albumData = JSON.parse(data);
+        //     const albumEntries = document.querySelectorAll(`.${albumData.albumId}`);
+        //     for(const entry of albumEntries){ entry.updateCount(albumData.count); }
+        // });
+
+        // TODO Frame should listen to when images are uploaded not album specific events
+    </script>
 </body>
 </html>
