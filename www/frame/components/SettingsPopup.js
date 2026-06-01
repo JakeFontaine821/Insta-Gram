@@ -185,7 +185,6 @@ export default class SettingsPopup extends HTMLElement{
     };
 
     async loadStoragePanel(){
-        console.log('thats')
         const storageResponse = await sendRequest('/frame/storage');
         const free = storageResponse.data.free / 1000000000; // converting bytes to gigabytes
         const total = storageResponse.data.total / 1000000000; // converting bytes to gigabytes
