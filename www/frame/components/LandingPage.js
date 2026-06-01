@@ -154,7 +154,7 @@ AddStyle(/*css*/`
         position: absolute;
         bottom: 0;
         left: 10%;
-        font-size: 2em;
+        font-size: 8rem;
         z-index: 2;
     }
 
@@ -162,7 +162,7 @@ AddStyle(/*css*/`
         position: absolute;
         top: -20%;
         right: 0;
-        width: 70%;
+        width: 65%;
     }
 
     .landing-page .weather-button .bottom{

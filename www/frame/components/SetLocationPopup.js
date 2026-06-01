@@ -34,7 +34,8 @@ AddStyle(/*css*/`
     .set-location-popup .popup-container .back-button{
         display: flex;
         align-items: center;
-        border: 1px solid var(--primary);
+        background-color: var(--g);
+        border: 2px solid var(--primary);
         border-radius: 35px;
         padding: 10px 20px 10px 15px;
         height: 70px;
@@ -46,7 +47,7 @@ AddStyle(/*css*/`
 
     .set-location-popup .popup-container input{
         flex: 1;
-        border: 1px solid var(--primary);
+        border: 2px solid var(--primary);
         border-radius: 35px;
         font-size: 2.5rem;
         height: 70px;
@@ -79,7 +80,7 @@ AddStyle(/*css*/`
         justify-content: center;
         align-items: end;
         padding-bottom: 5px;
-        border: 1px solid var(--accent);
+        border: 2px solid var(--accent);
         height: 55px;
         border-radius: 20px;
         cursor: pointer;

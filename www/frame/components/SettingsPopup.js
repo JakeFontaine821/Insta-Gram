@@ -41,6 +41,7 @@ AddStyle(/*css*/`
         display: flex;
         align-items: center;
         justify-content: center;
+        background-color: var(--g);
         border: 2px solid var(--primary);
         border-radius: 20px;
         padding: 5px 10px 5px 5px;
