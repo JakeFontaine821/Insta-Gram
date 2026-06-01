@@ -271,7 +271,7 @@ export default class LandingPage extends HTMLElement{
 
             if(!weatherResponse.success){ // Failed to get info, display to user and try again in a minute
                 weatherButton.innerHTML = 'Failed to get weather information';
-                setTimeout(loadWeather, 60000);
+                setTimeout(loadWeather, 60000); // Try again in a minute
 
                 return weatherButton.classList.remove('loading');
             }
@@ -306,7 +306,7 @@ export default class LandingPage extends HTMLElement{
         /***************************************************************************************/
         const settingsButton = this.querySelector('.settings-button');
         const settingsPopup = this.querySelector('.settings-popup');
-        settingsButton.addEventListener('click', () => settingsPopup.classList.remove('hidden'));
+        settingsButton.addEventListener('click', () => settingsPopup.show());
     };
 };
 customElements.define('landing-page', LandingPage);

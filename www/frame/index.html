@@ -26,9 +26,9 @@
             console.log('Received:', JSON.parse(event.data));
         };
 
-        eventSource.addEventListener('imagesaved', () => {
-            document.querySelector('settings-popup').loadStoragePanel();
-        });
+        // eventSource.addEventListener('imagesaved', () => {
+        //     document.querySelector('settings-popup').loadStoragePanel();
+        // });
         // TODO Frame should listen to when images are uploaded not album specific events
 
         // eventSource.addEventListener('albumcount', ({data}) => {

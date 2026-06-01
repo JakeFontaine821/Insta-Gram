@@ -83,7 +83,7 @@ AddStyle(/*css*/`
         flex-direction: column;
         align-items: center;
         gap: 15px;
-        padding: 20px 0;
+        padding: 20px;
         text-align: center;
         font-size: 1.75rem;
     }
@@ -91,8 +91,8 @@ AddStyle(/*css*/`
     .settings-popup .popup-container .storage-panel > .bar{
         width: 100%;
         height: 30px;
-        padding: 0 20px;
         position: relative;
+        border: 1px solid black;
     }
 
     .settings-popup .popup-container .storage-panel .fill{
@@ -106,7 +106,6 @@ AddStyle(/*css*/`
         width: 100%;
         height: 100%;
         background-color: #efefef;
-        border: 1px solid black;
     }
 `);
 
@@ -183,22 +182,30 @@ export default class SettingsPopup extends HTMLElement{
                 this.querySelector(`.panels .${tab.getAttribute('panel')}`).classList.remove('hidden');
             });
         }
-
-        this.loadStoragePanel();
     };
 
     async loadStoragePanel(){
+        console.log('thats')
         const storageResponse = await sendRequest('/frame/storage');
         const free = storageResponse.data.free / 1000000000; // converting bytes to gigabytes
         const total = storageResponse.data.total / 1000000000; // converting bytes to gigabytes
-
+        
         const imageCountResponse = await sendRequest('/frame/storage/count');
         const photoCount = imageCountResponse.count["COUNT(*)"];
+        
+        const percentStorageUsed = (free / total) * 100;
+        const fillBar = this.querySelector('.storage-panel .bar .fill');
+        fillBar.style.width = `${percentStorageUsed}%`;
+        fillBar.style.backgroundColor = percentStorageUsed < 75 ? 'green' : percentStorageUsed < 85 ? 'yellow' : percentStorageUsed < 95 ? 'orange' : 'red';
 
-        this.querySelector('.storage-panel .bar .fill').style.width = `${(free / total) * 100}%`;
         this.querySelector('.storage-panel .used').innerHTML = `You've used ${Math.round(total - free)}gb of storage`;
         this.querySelector('.storage-panel .free').innerHTML = `There is ${Math.round(free)}gb remaining`;
         this.querySelector('.storage-panel .estimate').innerHTML = photoCount ? `You can add about ${Math.round((total / free) * photoCount)} more photos` : '';
+    };
+
+    show(){
+        this.classList.remove('hidden');
+        this.loadStoragePanel();
     };
 };
 customElements.define('settings-popup', SettingsPopup);
