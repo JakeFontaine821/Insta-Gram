@@ -202,6 +202,11 @@ export default class SettingsPopup extends HTMLElement{
         this.querySelector('.storage-panel .free').innerHTML = `There is ${Math.round(free)}gb remaining`;
         this.querySelector('.storage-panel .estimate').innerHTML = photoCount ? `You can add about ${Math.round((total / free) * photoCount)} more photos` : '';
     };
+    
+    async loadWifiPanel(){
+        const wifiResponse = await sendRequest('/frame/wifi');
+        
+    };
 
     show(){
         this.classList.remove('hidden');
