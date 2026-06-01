@@ -1,9 +1,6 @@
+/****************************************Wifi Utils TODO This is copied from the github, need to do some testing*/
 const wifi = require('node-wifi');
 wifi.init({ iface: null });
-
-const disk = require('diskusage');
-const os = require('os');
-let path = os.platform() === 'win32' ? 'c:' : '/';
 
 async function getWifiNetworks(){
     const wifiResponse = await wifi.scan();
@@ -25,12 +22,17 @@ async function setWifiNetwork(ssid, password){
 async function disconnectWifiNetwork(){
     wifi.deleteConnection({ ssid: 'ssid' }, error => {
         if (error) {
-          console.log(error);
+            console.log(error);
         } else {
-          console.log('Deleted');
+            console.log('Deleted');
         }
     });
 };
+
+/****************************************Storage Utils */
+const disk = require('diskusage');
+const os = require('os');
+let path = os.platform() === 'win32' ? 'c:' : '/';
 
 async function getStorage(){
     const data = await disk.check(path);

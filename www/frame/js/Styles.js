@@ -110,7 +110,7 @@ AddStyle(/*css*/`
         clip-path: inset(0 0 50% 0);
         animation: loading-spin var(--loading-duration, 1s) linear infinite;
         pointer-events: none;
-        z-index: 9999;
+        z-index: 9998;
     }
 
     @keyframes loading-spin {

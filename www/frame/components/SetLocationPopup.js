@@ -10,6 +10,7 @@ AddStyle(/*css*/`
         display: flex;
         justify-content: center;
         align-items: center;
+        z-index: 9999;
     }
 
     .set-location-popup .popup-container{

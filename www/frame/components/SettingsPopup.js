@@ -10,6 +10,7 @@ AddStyle(/*css*/`
         display: flex;
         justify-content: center;
         align-items: center;
+        z-index: 9999;
     }
 
     .settings-popup .popup-container{
@@ -151,10 +152,16 @@ export default class SettingsPopup extends HTMLElement{
                     </div>
 
                     <div class="credits-panel hidden">
-                        <div>All Hardware and assembly was done by Jake :)</div>
-                        <div>All Software for the application was written by Jake :)</div>
+                        <div>All Hardware and assembly was done by</div>
+                        <div>Jake :)</div>
+                        <div></div>
+                        <div>All Software for the application was written by</div>
+                        <div>Jake :)</div>
+                        <div></div>
                         <div>Building the frame was contributed by TODO</div>
-                        <div>"Insta-Gram" was coined by Jason :)</div>
+                        <div></div>
+                        <div>The name "Insta-Gram" was coined by</div>
+                        <div>Jason :)</div>
                     </div>
 
                 </div>

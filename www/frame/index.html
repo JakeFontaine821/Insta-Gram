@@ -26,11 +26,10 @@
             console.log('Received:', JSON.parse(event.data));
         };
 
-        // TODO
-        // eventSource.addEventListener('albumreload', () => {
-        //     rootPage.loadAlbums();
-        //     albumManagerPage.loadAlbums();
-        // });
+        eventSource.addEventListener('imagesaved', () => {
+            document.querySelector('settings-popup').loadStoragePanel();
+        });
+        // TODO Frame should listen to when images are uploaded not album specific events
 
         // eventSource.addEventListener('albumcount', ({data}) => {
         //     const albumData = JSON.parse(data);
@@ -38,7 +37,6 @@
         //     for(const entry of albumEntries){ entry.updateCount(albumData.count); }
         // });
 
-        // TODO Frame should listen to when images are uploaded not album specific events
     </script>
 </body>
 </html>

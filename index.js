@@ -63,8 +63,9 @@ app.post('/frame/weather/suggest', async (req, res) => res.json(await WeatherUti
 // })();
 
 // https://github.com/friedrith/node-wifi
-app.get('/frame/wifi', async () => {});
-app.post('/frame/wifi/set', async () => {});
+app.get('/frame/wifi', async (req, res) => res.json(await SettingsUtils.getWifiNetworks()));
+app.post('/frame/wifi/connect', async (req, res) => res.json(await SettingsUtils.setWifiNetwork(req.body.ssid, req.body.password)));
+app.get('/frame/wifi/disconnect', async (req, res) => res.json(SettingsUtils.disconnectWifiNetwork()));
 
 // Storage Display
 // https://www.npmjs.com/package/diskusage
@@ -115,7 +116,6 @@ app.post('/sender/photo/save', upload.single('imageFile'), (req, res) => {
     if (!metadata.albumIds) { return res.json({ success: false, error: 'Missing required field: \'albumIds\'' }); }
     if (!metadata.dateAdded) { return res.json({ success: false, error: 'Missing required field: \'dateAdded\'' }); }
     
-    // TODO INCRIMENT ALBUM COUNTS
     const parsedAlbumIds = JSON.parse(metadata.albumIds);
     for(const albumId of parsedAlbumIds){
         const incremenetResponse = AlbumDatabaseManager.incrementPhotoCount(albumId);
@@ -123,7 +123,9 @@ app.post('/sender/photo/save', upload.single('imageFile'), (req, res) => {
         broadcast('albumcount', { albumId, count: incremenetResponse.count });
     }
     
-    return res.json(ImageDatabaseManager.addImage(Object.assign(metadata, { filePath: req.file.path })));
+    const imageSaveResponse = ImageDatabaseManager.addImage(Object.assign(metadata, { filePath: req.file.path }));
+    if(imageSaveResponse.success){ broadcast('imagesaved'); }
+    return res.json(imageSaveResponse);
 });
 
 /****************************************************************************************************/
