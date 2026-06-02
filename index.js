@@ -64,8 +64,9 @@ SettingsUtils.getWifiNetworks();
 
 // https://github.com/friedrith/node-wifi
 app.get('/frame/wifi', async (req, res) => res.json(await SettingsUtils.getWifiNetworks()));
-app.post('/frame/wifi/connect', async (req, res) => res.json(await SettingsUtils.setWifiNetwork(req.body.ssid, req.body.password)));
-app.get('/frame/wifi/disconnect', async (req, res) => res.json(SettingsUtils.disconnectWifiNetwork()));
+app.post('/frame/wifi/connect', async (req, res) => res.json(await SettingsUtils.setWifiNetwork(req.body.ssid, req.body.password, req.body.saveConnection)));
+app.post('/frame/wifi/disconnect', async (req, res) => res.json(await SettingsUtils.disconnectWifiNetwork()));
+app.post('/frame/wifi/forget', async (req, res) => res.json(await SettingsUtils.forgetNetwork(req.body.ssid)));
 
 // Storage Display
 // https://www.npmjs.com/package/diskusage

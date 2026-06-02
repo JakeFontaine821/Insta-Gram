@@ -1,5 +1,6 @@
 import AddStyle from '../js/Styles.js';
 import { sendRequest } from '../js/utils.js';
+import WifiEntry from './WifiEntry.js';
 
 AddStyle(/*css*/`
     .settings-popup{
@@ -14,8 +15,8 @@ AddStyle(/*css*/`
     }
 
     .settings-popup .popup-container{
-        height: 70vh;
-        width: 60vw;
+        height: 80vh;
+        width: 70vw;
         background-color: var(--background);
         border-radius: 30px;
         display: flex;
@@ -43,8 +44,9 @@ AddStyle(/*css*/`
         justify-content: center;
         background-color: var(--g);
         border: 2px solid var(--primary);
-        border-radius: 20px;
-        padding: 5px 10px 5px 5px;
+        border-radius: 35px;
+        padding: 10px 20px 10px 15px;
+        height: 70px;
         font-size: 2rem;
     }
 
@@ -80,6 +82,7 @@ AddStyle(/*css*/`
     }
 
     .settings-popup .popup-container > .panels > div{
+        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -87,6 +90,18 @@ AddStyle(/*css*/`
         padding: 20px;
         text-align: center;
         font-size: 1.75rem;
+    }
+
+    .settings-popup .popup-container .wifi-panel .list-outer{
+        width: 100%;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .settings-popup .popup-container .wifi-panel .list-inner{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
     }
 
     .settings-popup .popup-container .storage-panel > .bar{
@@ -139,7 +154,12 @@ export default class SettingsPopup extends HTMLElement{
                         <div>Finally I thought, I can build a better one, so I did. Hope you enjoy :)</div>
                     </div>
 
-                    <div class="wifi-panel hidden">wifi panel</div>
+                    <div class="wifi-panel hidden">
+                        Available Wifi Networks
+                        <div class="list-outer">
+                            <div class="list-inner"></div>
+                        </div>
+                    </div>
 
                     <div class="storage-panel hidden">
                         <div class="bar">
@@ -193,7 +213,7 @@ export default class SettingsPopup extends HTMLElement{
         const imageCountResponse = await sendRequest('/frame/storage/count');
         const photoCount = imageCountResponse.count["COUNT(*)"];
         
-        const percentStorageUsed = (free / total) * 100;
+        const percentStorageUsed = ((total - free) / total) * 100;
         const fillBar = this.querySelector('.storage-panel .bar .fill');
         fillBar.style.width = `${percentStorageUsed}%`;
         fillBar.style.backgroundColor = percentStorageUsed < 75 ? 'green' : percentStorageUsed < 85 ? 'yellow' : percentStorageUsed < 95 ? 'orange' : 'red';
@@ -205,12 +225,42 @@ export default class SettingsPopup extends HTMLElement{
     
     async loadWifiPanel(){
         const wifiResponse = await sendRequest('/frame/wifi');
-        
+        const a = [{
+            ssid: 'network 1',
+            CONNECTED: true,
+            quality: 80,
+            security: 'WP0'
+        },{
+            ssid: 'network 2',
+            CONNECTED: false,
+            quality: 50,
+            security: 'WP0'
+        },{
+            ssid: 'network 3',
+            CONNECTED: false,
+            quality: 30,
+            security: ''
+        },{
+            ssid: 'network 4',
+            CONNECTED: false,
+            quality: 70,
+            security: 'WP0'
+        }];
+
+        const wifiList = this.querySelector('.wifi-panel .list-inner');
+        for(const network of a/*wifiResponse.networks*/){
+            const newWifiEntry = new WifiEntry(network);
+
+            newWifiEntry.addEventListener('reload', () => this.loadWifiPanel());
+
+            wifiList.appendChild(newWifiEntry);
+        }
     };
 
     show(){
         this.classList.remove('hidden');
         this.loadStoragePanel();
+        this.loadWifiPanel();
     };
 };
 customElements.define('settings-popup', SettingsPopup);
