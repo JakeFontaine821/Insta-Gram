@@ -97,15 +97,15 @@ export default class WifiEntry extends HTMLElement{
                 <div class="forget-network-button" ${network.CONNECTED ? '' : 'disabled'}>Forget Network</div>
                 <div class="disconnect-button" ${network.CONNECTED ? '' : 'disabled'}>Disconnect Network</div>
                 <div class="password-input-container" ${network.CONNECTED ? 'disabled' : ''}>
-                    <input class="password-input" placeholder="password"/>
+                    Save Connection:
+                    <input class="save-connection-input" type="checkbox" />
+                    <input class="password-input" placeholder="password" />
                     <div class="connect-button">Connect</div>
                 </div>
             </div>
         `;
 
         this.querySelector('.main-row').addEventListener('click', () => this.classList.toggle('expand'));
-
-
     };
 };
 customElements.define('wifi-entry', WifiEntry);
