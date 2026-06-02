@@ -95,6 +95,7 @@ AddStyle(/*css*/`
         flex-direction: column;
         justify-content: space-between;
         overflow: hidden;
+        font-weight: 600;
     }
 
     .landing-page .calender-button .month{
@@ -127,6 +128,7 @@ AddStyle(/*css*/`
         color: var(--text);
         background-color: #87CEEB;
         text-shadow: 0px 0px 5px #87CEEB;
+        font-weight: 600;
     }
 
     .landing-page .weather-button.night{
@@ -204,9 +206,9 @@ export default class LandingPage extends HTMLElement{
                         <div class="container">
                             <div class="analog">
                                 <svg class="clock" xmlns="http://www.w3.org/2000/svg" width="260" height="260" viewBox="0 0 260 260" fill="#eadaf0" stroke-width="6"><circle cx="130" cy="130" r="120" fill="#38293d"/><text x="113" y="44" font-size="36">12</text><text dx="223" dy="142.5" font-size="36">3</text><text dx="120" dy="242" font-size="36">6</text><text dx="18" dy="142.5" font-size="36">9</text><path d="m180 43.397-5 8.66M80 216.604l5-8.66M216.603 80l-8.66 5M43.396 180l8.66-5m164.547 5-8.66-5M43.396 80l8.66 5M180 216.603l-5-8.66M80 43.396l5 8.66" stroke="#eadaf0" stroke-linecap="round"/></svg>
-                                <svg class="second-hand" xmlns="http://www.w3.org/2000/svg" width="260" height="260" viewBox="0 0 260 260" fill="#eadaf0" stroke-width="6"><path stroke="#bc87b0" stroke-width="3" d="M130 130V40"/><circle cx="130" cy="40" r="1.5" fill="#bc87b0"/></svg>
-                                <svg class="hour-hand" xmlns="http://www.w3.org/2000/svg" width="260" height="260" viewBox="0 0 260 260" fill="#eadaf0" stroke-width="6"><circle cx="130" cy="130" r="5"/><circle cx="130" cy="130" r="2" fill="#38293d"/><path stroke="#eadaf0" d="M130 127V95"/><circle cx="130" cy="95" r="3"/></svg>
-                                <svg class="minute-hand" xmlns="http://www.w3.org/2000/svg" width="260" height="260" viewBox="0 0 260 260" fill="#eadaf0" stroke-width="6"><circle cx="130" cy="130" r="5"/><path stroke="#eadaf0" stroke-width="4" d="M130 127V65"/><circle cx="130" cy="65" r="2"/><circle cx="130" cy="130" r="2" fill="#38293d"/></svg>
+                                <svg class="second-hand" xmlns="http://www.w3.org/2000/svg" width="260" height="260" viewBox="0 0 260 260" fill="#eadaf0" stroke-width="6"><path stroke="#bc87b0" stroke-width="4" d="M130 130V40"/><circle cx="130" cy="40" r="1.5" fill="#bc87b0"/></svg>
+                                <svg class="hour-hand" xmlns="http://www.w3.org/2000/svg" width="260" height="260" viewBox="0 0 260 260" fill="#eadaf0" stroke-width="6"><circle cx="130" cy="130" r="5"/><circle cx="130" cy="130" r="2" fill="#38293d"/><path stroke="#eadaf0" d="M130 127V85"/><circle cx="130" cy="85" r="3"/></svg>
+                                <svg class="minute-hand" xmlns="http://www.w3.org/2000/svg" width="260" height="260" viewBox="0 0 260 260" fill="#eadaf0" stroke-width="6"><circle cx="130" cy="130" r="5"/><path stroke="#eadaf0" stroke-width="5" d="M130 127V55"/><circle cx="130" cy="55" r="2"/><circle cx="130" cy="130" r="2" fill="#38293d"/></svg>
                             </div>
                             <div class="digital">
                                 <div class="hour">00</div>
