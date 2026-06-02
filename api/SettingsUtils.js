@@ -18,13 +18,15 @@ wifi.init({ iface: null });
 // Get all Networks available and mark one as currently connected if necessary
 async function getWifiNetworks(){
     const allNetworks = await wifi.scan();
+    const filteredNetworks = allNetworks.filter(network => network.ssid !== '');
+
     const currentConnection = await wifi.getCurrentConnections();
 
     // If we're currently connected, assign a CONNECTED flag for the UI
-    const foundNetwork = allNetworks.find(network => network.ssid === currentConnection[0].ssid)
+    const foundNetwork = filteredNetworks.find(network => network.ssid === currentConnection[0].ssid)
     if(currentConnection.length && foundNetwork){ foundNetwork.CONNECTED = true; }
 
-    return { success: true, networks: allNetworks };
+    return { success: true, networks: filteredNetworks };
 };
 
 // Get Current returns array with full object when connected
@@ -38,9 +40,8 @@ async function getWifiNetworks(){
 // Try to connect to network then confirm connection succeeded
 // Save Connection to database to automatically connect if necessary
 const saveConnectionStatement = db.prepare(`INSERT INTO savedconnections (ssid, password) VALUES (@ssid, @password)`);
-async function setWifiNetwork(ssid=undefined, password=undefined, saveConnection=false){
-    // Disconnect from current network
-    await disconnectWifiNetwork();
+async function setWifiNetwork(ssid=undefined, password='', saveConnection=false){
+    if(!ssid){ return { success: false, error: 'Missing required field \'ssid\'' }; }
 
     // Connect to wifi
     await wifi.connect({ ssid, password });
@@ -61,7 +62,7 @@ async function disconnectWifiNetwork(){
     const previousConnection = await wifi.getCurrentConnections();
     if(!previousConnection.length){ return { success: true }; }
 
-    const deleteResponse = await wifi.disconnect();
+    await wifi.disconnect();
 
     const currentConnection = await wifi.getCurrentConnections();
     const success = !currentConnection.length || currentConnection[0].ssid !== previousConnection[0].ssid;
@@ -72,11 +73,15 @@ async function disconnectWifiNetwork(){
 // Disconnect from current network
 const removeConnectionStatement = db.prepare(`DELETE FROM savedconnections WHERE ssid=@ssid`);
 async function forgetNetwork(ssid){
+    if(!ssid){ return { success: false, error: 'Missing required field \'ssid\'' }; }
+
     await disconnectWifiNetwork();
     await wifi.deleteConnection({ ssid });
 
     try{ removeConnectionStatement.run({ ssid }); }
-    catch(err){ console.error('Failed to save network settings'); }
+    catch(err){ return { success: false, error: 'Failed to save network settings' }; }
+
+    return { success: true };
 };
 
 /****************************************Storage Utils */
