@@ -43,6 +43,21 @@ AddStyle(/*css*/`
         border-radius: 20px;
     }
 
+    /********************************* PHOTOS BUTTON ******************************/
+    .landing-page .photos-button{
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows: auto auto;
+        column-gap: 10px;
+        row-gap: 10px;
+        padding: 10px;
+    }
+
+    .landing-page .photos-button > img{
+        height: 100%;
+        width: 100%;
+    }
+
     /********************************* CLOCK BUTTON ******************************/
     .landing-page .clock-button{
         background: black;
@@ -184,7 +199,8 @@ export default class LandingPage extends HTMLElement{
 
         this.innerHTML = `
             <div class="left">
-                <div class="button">Photos</div>
+                <div class="button photos-button">
+                </div>
             </div>
             <div class="right">
                 <div class="top">
@@ -229,6 +245,28 @@ export default class LandingPage extends HTMLElement{
             <set-location-popup></set-location-popup>
             <settings-popup></settings-popup>
         `;
+
+        /***************************************************************************************/
+        /*                              PHOTOS BUTTON                                          */
+        /***************************************************************************************/
+        const photosButton = this.querySelector('.photos-button');
+        const loadPhotos = async () => {
+            const imageMetadata = await sendRequest('/images/random?limit=4');
+            if(!imageMetadata.success){ return setTimeout(loadPhotos, 10000); }
+
+            while(photosButton.firstChild){ photosButton.firstChild.remove(); }
+
+            for(const metadata of imageMetadata.entries){
+                const newImg = document.createElement('img');
+                newImg.src = metadata.file_path;
+                newImg.alt = 'Failed to load image...';
+
+                photosButton.appendChild(newImg);
+            }
+
+            setTimeout(loadPhotos, 10000);
+        };
+        loadPhotos();
 
         /***************************************************************************************/
         /*                              CLOCK BUTTON                                           */

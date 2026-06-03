@@ -6,6 +6,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 app.use('/', express.static(path.join(__dirname, './www')));
+app.use('/images', express.static(path.join(__dirname, './images')));
 
 const { networkInterfaces } = require('os');
 const HOST = Array.from(Object.values(networkInterfaces())).flat().find(net => net.family === 'IPv4' && !net.internal)?.address ?? 'localhost';
@@ -36,7 +37,6 @@ const upload = multer({
 const WeatherUtils = require('./api/weatherUtils.js');
 const SettingsUtils = require('./api/SettingsUtils.js');
 const LocationDatabaseManager = require('./api/locationDatabaseManager.js');
-const { json } = require('stream/consumers');
 const AlbumDatabaseManager = require(path.join(__dirname, '/api/albumDatabaseManager.js'));
 const ImageDatabaseManager = require(path.join(__dirname, '/api/imageDatabaseManager.js'));
 
@@ -47,6 +47,18 @@ app.get('/', (req, res) => res.json({ success: true, message: "Sending JSON" }))
 
 app.get('/frame', (req, res) => res.sendFile(path.join(__dirname, '/www/frame/index.html')));
 app.get('/frame/host', (req, res) => res.json({ host: HOST, port: PORT }));
+
+app.get('/images/random', (req, res) => {
+    if(!req.query.limit){ return { success: false, error: 'Missing required field \'limit\'' }; }
+
+    const imageMetadata = (() => {
+        if(req.query.albumId){ return ImageDatabaseManager.getRandomImages_album(req.query.albumId, req.query.limit); }
+        return ImageDatabaseManager.getRandomImages(req.query.limit);
+    })();
+
+    if(!imageMetadata.success){ return res.json(imageMetadata); }
+    res.json(imageMetadata);
+});
 
 // Weather
 app.get('/frame/weather', async (req, res) => res.json(await WeatherUtils.getWeatherData()));
@@ -124,7 +136,7 @@ app.post('/sender/photo/save', upload.single('imageFile'), (req, res) => {
         broadcast('albumcount', { albumId, count: incremenetResponse.count });
     }
     
-    const imageSaveResponse = ImageDatabaseManager.addImage(Object.assign(metadata, { filePath: req.file.path }));
+    const imageSaveResponse = ImageDatabaseManager.addImage(Object.assign(metadata, { filePath: `/${req.file.path}` }));
     if(imageSaveResponse.success){ broadcast('imagesaved'); }
     return res.json(imageSaveResponse);
 });

@@ -18,6 +18,20 @@ function getAllImages(){
     catch(err){ return { success: false, error: `Failed to get entries from database: ${err}` }; }
 };
 
+function getRandomImages(limit=3){
+    const getRandomStatement = db.prepare(`SELECT * FROM imageMetadata ORDER BY RANDOM() LIMIT ${limit};`);
+    
+    try{ return { success: true, entries: getRandomStatement.all() }; }
+    catch(err){ return { success: false, error: `Failed to get entries from database: ${err}` }; }
+};
+
+function getRandomImages_album(albumId='', limit=3){
+    const getRandomStatement = db.prepare(`SELECT * FROM imageMetadata WHERE album_ids LIKE '%${albumId}%' ORDER BY RANDOM() LIMIT ${limit};`);
+    
+    try{ return { success: true, entries: getRandomStatement.all() }; }
+    catch(err){ return { success: false, error: `Failed to get entries from database: ${err}` }; }
+};
+
 const addImageStatement = db.prepare('INSERT INTO imageMetadata (file_path, sent_by, date_added, album_ids) VALUES (@filePath, @sentBy, @dateAdded, @albumIds)');
 function addImage(metaData){
     try{ addImageStatement.run(metaData); }
@@ -34,6 +48,8 @@ function totalImageCount(){
 
 module.exports = {
     getAllImages,
+    getRandomImages,
+    getRandomImages_album,
     addImage,
     totalImageCount
 };
