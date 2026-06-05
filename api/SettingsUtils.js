@@ -1,15 +1,4 @@
 /****************************************Wifi Utils TODO This is copied from the github, need to do some testing*/
-const path = require('path');
-const Database = require('better-sqlite3');
-const db = new Database(path.join(__dirname, './database.db'));
-
-// Set up saved connection database
-db.prepare(`
-    CREATE TABLE IF NOT EXISTS savedconnections (
-        ssid        STRING NOT NULL PRIMARY KEY,
-        password    STRING NOT NULL
-    ) WITHOUT ROWID
-`).run();
 
 // Setup Wifi
 const wifi = require('node-wifi');
@@ -39,8 +28,7 @@ async function getWifiNetworks(){
 
 // Try to connect to network then confirm connection succeeded
 // Save Connection to database to automatically connect if necessary
-const saveConnectionStatement = db.prepare(`INSERT INTO savedconnections (ssid, password) VALUES (@ssid, @password)`);
-async function setWifiNetwork(ssid=undefined, password='', saveConnection=false){
+async function setWifiNetwork(ssid=undefined, password=''){
     if(!ssid){ return { success: false, error: 'Missing required field \'ssid\'' }; }
 
     // Connect to wifi
@@ -49,11 +37,6 @@ async function setWifiNetwork(ssid=undefined, password='', saveConnection=false)
     const currentConnection = await wifi.getCurrentConnections();
     const success = currentConnection.length && ssid === currentConnection[0].ssid;
 
-    if(saveConnection){
-        try{ saveConnectionStatement.run({ ssid, password }); }
-        catch(err){ console.error('Failed to save network settings'); }
-    }
-    
     return { success };
 };
 
@@ -70,16 +53,11 @@ async function disconnectWifiNetwork(){
     return { success };
 };
 
-// Disconnect from current network
-const removeConnectionStatement = db.prepare(`DELETE FROM savedconnections WHERE ssid=@ssid`);
 async function forgetNetwork(ssid){
     if(!ssid){ return { success: false, error: 'Missing required field \'ssid\'' }; }
 
     await disconnectWifiNetwork();
     await wifi.deleteConnection({ ssid });
-
-    try{ removeConnectionStatement.run({ ssid }); }
-    catch(err){ return { success: false, error: 'Failed to save network settings' }; }
 
     return { success: true };
 };

@@ -225,30 +225,30 @@ export default class SettingsPopup extends HTMLElement{
     
     async loadWifiPanel(){
         const wifiResponse = await sendRequest('/frame/wifi');
-        // const a = [{
-        //     ssid: 'network 1',
-        //     CONNECTED: true,
-        //     quality: 80,
-        //     security: 'WP0'
-        // },{
-        //     ssid: 'network 2',
-        //     CONNECTED: false,
-        //     quality: 50,
-        //     security: 'WP0'
-        // },{
-        //     ssid: 'network 3',
-        //     CONNECTED: false,
-        //     quality: 30,
-        //     security: ''
-        // },{
-        //     ssid: 'network 4',
-        //     CONNECTED: false,
-        //     quality: 70,
-        //     security: 'WP0'
-        // }];
+        const a = [{
+            ssid: 'network 1',
+            CONNECTED: true,
+            quality: 80,
+            security: 'WP0'
+        },{
+            ssid: 'network 2',
+            CONNECTED: false,
+            quality: 50,
+            security: 'WP0'
+        },{
+            ssid: 'network 3',
+            CONNECTED: false,
+            quality: 30,
+            security: ''
+        },{
+            ssid: 'network 4',
+            CONNECTED: false,
+            quality: 70,
+            security: 'WP0'
+        }];
 
         const wifiList = this.querySelector('.wifi-panel .list-inner');
-        for(const network of wifiResponse.networks){
+        for(const network of a/*wifiResponse.networks*/){
             const newWifiEntry = new WifiEntry(network);
 
             newWifiEntry.addEventListener('reload', () => this.loadWifiPanel());

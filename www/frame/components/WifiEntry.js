@@ -69,29 +69,13 @@ AddStyle(/*css*/`
         font-size: 1.5rem;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
     }
 
     .wifi-entry .password-input-container > div{
         display: flex;
         align-items: center;
         gap: 10px;
-    }
-
-    .wifi-entry .password-input-container .save-connection-input{
-        height: 30px;
-        width: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 1px solid var(--primary);
-        border-radius: 10px;
-        stroke: none;
-    }
-
-    .wifi-entry .password-input-container .save-connection-input.selected{
-        stroke: var(--text);
-        background: var(--secondary);
     }
 
     .wifi-entry .password-input.error{
@@ -125,10 +109,6 @@ export default class WifiEntry extends HTMLElement{
                 <div class="forget-network-button">Forget Network</div>
                 <div class="disconnect-button">Disconnect Network</div>
                 <div class="password-input-container">
-                    <div class="save-connection-container">
-                        Save Connection:
-                        <div class="save-connection-input"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 9 9" width="24" fill="none"><path d="m1 4 2.5 2.5L8 2"/></svg></div>
-                    </div>
                     <div class="connect-container">
                         <input class="password-input" placeholder="password" />
                         <div class="connect-button">Connect</div>
@@ -140,12 +120,10 @@ export default class WifiEntry extends HTMLElement{
         const forgetNetworkButton = this.querySelector('.forget-network-button');
         const disconnectButton = this.querySelector('.disconnect-button');
         const passwordInputContainer = this.querySelector('.password-input-container');
-        const saveConnectionInput = this.querySelector('.save-connection-input');
 
         forgetNetworkButton.classList.toggle('hidden', !this.network.CONNECTED);
         disconnectButton.classList.toggle('hidden', !this.network.CONNECTED);
         passwordInputContainer.classList.toggle('hidden', this.network.CONNECTED);
-        saveConnectionInput.addEventListener('click', () => saveConnectionInput.classList.toggle('selected'));
 
         // Expand if password protected OR if already connected. Otherwise connect
         this.querySelector('.main-row').addEventListener('click', async () => {
@@ -191,7 +169,6 @@ export default class WifiEntry extends HTMLElement{
                 { body: { 
                     ssid: this.network.ssid,
                     password: passwordInput.value,
-                    saveConnection: saveConnectionInput.classList.contains('selected')
                 } }
             );
             if(connectResponse.success){ this.dispatchEvent(new Event('reload')); }
