@@ -46,16 +46,25 @@ AddStyle(/*css*/`
     /********************************* PHOTOS BUTTON ******************************/
     .landing-page .photos-button{
         display: grid;
-        grid-template-columns: auto auto;
-        grid-template-rows: auto auto;
-        column-gap: 10px;
-        row-gap: 10px;
-        padding: 10px;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        column-gap: 15px;
+        row-gap: 15px;
+        padding: 15px;
+        background-color: var(--e);
     }
 
-    .landing-page .photos-button > img{
+    .landing-page .photos-button > div{
         height: 100%;
-        width: 100%;
+        background-size: cover;
+        opacity: 0%;
+    }
+    
+    @keyframes imageFade {
+        0%   { opacity: 0%; }
+        25%  { opacity: 100%; }
+        75%  { opacity: 100%; }
+        100% { opacity: 0%; }
     }
 
     /********************************* CLOCK BUTTON ******************************/
@@ -200,6 +209,10 @@ export default class LandingPage extends HTMLElement{
         this.innerHTML = `
             <div class="left">
                 <div class="button photos-button">
+                    <div style="border-top-left-radius=20px"></div>
+                    <div style="border-top-right-radius=20px"></div>
+                    <div style="border-bottom-left-radius=20px"></div>
+                    <div style="border-bottom-right-radius=20px"></div>
                 </div>
             </div>
             <div class="right">
@@ -250,18 +263,19 @@ export default class LandingPage extends HTMLElement{
         /*                              PHOTOS BUTTON                                          */
         /***************************************************************************************/
         const photosButton = this.querySelector('.photos-button');
+        const photosContainers = Array.from(photosButton.children);
         const loadPhotos = async () => {
             const imageMetadata = await sendRequest('/images/random?limit=4');
-            if(!imageMetadata.success){ return setTimeout(loadPhotos, 10000); }
+            if(!imageMetadata.success || !imageMetadata.entries.length){ return setTimeout(loadPhotos, 10000); }
 
-            while(photosButton.firstChild){ photosButton.firstChild.remove(); }
+            // Set the new photo and restart the animation
+            for(const [i, div] of photosContainers.entries()){
+                div.style.backgroundImage = `url(${imageMetadata.entries[i].file_path})`;
+                div.style.animation = 'none';
+                div.offsetWidth;
+                div.style.animation = 'imageFade 10s';
 
-            for(const metadata of imageMetadata.entries){
-                const newImg = document.createElement('img');
-                newImg.src = metadata.file_path;
-                newImg.alt = 'Failed to load image...';
-
-                photosButton.appendChild(newImg);
+                await new Promise(resolve => setTimeout(resolve, 500));
             }
 
             setTimeout(loadPhotos, 10000);

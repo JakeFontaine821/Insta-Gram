@@ -66,7 +66,7 @@ app.post('/frame/weather/set', async (req, res) => res.json(await LocationDataba
 app.post('/frame/weather/suggest', async (req, res) => res.json(await WeatherUtils.getWeatherSuggestions(req.body.query)));
 
 // Wifi Settings
-SettingsUtils.getWifiNetworks();
+// SettingsUtils.getWifiNetworks();
 // const wifi = require('node-wifi');
 // wifi.init({ iface: null });
 // (async () => {

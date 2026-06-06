@@ -4,7 +4,7 @@ import { sendRequest, WifiStrengthToIcon } from '../js/utils.js';
 AddStyle(/*css*/`
     .wifi-entry{
         border: 2px solid var(--accent);
-        height: 55px;
+        height: 80px;
         transition: height .5s;
         overflow: hidden;
         border-radius: 20px;
@@ -14,7 +14,7 @@ AddStyle(/*css*/`
     }
 
     .wifi-entry.expand{
-        height: 110px;
+        height: 160px;
     }
 
     .wifi-entry > div{
@@ -22,7 +22,7 @@ AddStyle(/*css*/`
         align-items: center;
         justify-content: space-between;
         gap: 10px;
-        height: 51px;
+        height: 76px;
         padding: 0 10px;
     }
 
@@ -58,8 +58,8 @@ AddStyle(/*css*/`
 
     .wifi-entry *:is(.forget-network-button, .disconnect-button){
         font-size: 1.25rem;
-        border: 1px solid var(--accent);
-        padding: 5px;
+        border: 2px solid var(--accent);
+        padding: 15px;
         border-radius: 10px;
         background-color: var(--secondary);
     }
@@ -84,8 +84,8 @@ AddStyle(/*css*/`
 
     .wifi-entry .connect-button{
         font-size: 1.25rem;
-        border: 1px solid var(--accent);
-        padding: 5px;
+        border: 2px solid var(--accent);
+        padding: 10px;
         border-radius: 10px;
         background-color: var(--secondary);
     }
