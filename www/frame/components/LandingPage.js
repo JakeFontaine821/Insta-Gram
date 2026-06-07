@@ -264,7 +264,7 @@ export default class LandingPage extends HTMLElement{
         /***************************************************************************************/
         const photosButton = this.querySelector('.photos-button');
         const photosContainers = Array.from(photosButton.children);
-        const loadPhotos = async () => {
+        const loadPhotos = async () => { // TODO stop this if page isnt shown, same as AlbumPage
             const imageMetadata = await sendRequest('/images/random?limit=4');
             if(!imageMetadata.success || !imageMetadata.entries.length){ return setTimeout(loadPhotos, 10000); }
 
@@ -281,6 +281,8 @@ export default class LandingPage extends HTMLElement{
             setTimeout(loadPhotos, 10000);
         };
         loadPhotos();
+
+        photosButton.addEventListener('click', () => this.dispatchEvent(new Event('photos')));
 
         /***************************************************************************************/
         /*                              CLOCK BUTTON                                           */
@@ -330,7 +332,6 @@ export default class LandingPage extends HTMLElement{
                 return weatherButton.classList.remove('loading');
             }
 
-            console.log(weatherResponse);
             weatherButton.innerHTML = `
                 <div class="top">
                     <div class="word">${weatherResponse.data.forecast}</div>

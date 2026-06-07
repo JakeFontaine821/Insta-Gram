@@ -1,5 +1,6 @@
 import AddStyle from '../js/Styles.js';
 import './LandingPage.js';
+import './AlbumPage.js';
 
 AddStyle(`
     .frame-root-page{
@@ -16,7 +17,19 @@ export default class FrameRootPage extends HTMLElement{
 
         this.innerHTML = `
             <landing-page></landing-page>
+            <album-page></album-page>
         `;
+
+        const LandingPage = document.querySelector('.landing-page');
+        const AlbumPage = document.querySelector('.album-page');
+
+        const swapPages = (showLanding=true) => {
+            LandingPage.classList.toggle('hidden', !showLanding);
+            AlbumPage.toggleVisible(!showLanding); // Album page has special functions
+        };
+
+        LandingPage.addEventListener('photos', () => swapPages(false));
+        AlbumPage.addEventListener('back', () => swapPages(true));
     };
 };
 customElements.define('frame-root-page', FrameRootPage);

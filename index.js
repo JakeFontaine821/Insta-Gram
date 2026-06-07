@@ -48,6 +48,7 @@ app.get('/', (req, res) => res.json({ success: true, message: "Sending JSON" }))
 app.get('/frame', (req, res) => res.sendFile(path.join(__dirname, '/www/frame/index.html')));
 app.get('/frame/host', (req, res) => res.json({ host: HOST, port: PORT }));
 
+app.get('/frame/albums', (req, res) => res.json(AlbumDatabaseManager.getAllAlbums()));
 app.get('/images/random', (req, res) => {
     if(!req.query.limit){ return { success: false, error: 'Missing required field \'limit\'' }; }
 
@@ -56,7 +57,6 @@ app.get('/images/random', (req, res) => {
         return ImageDatabaseManager.getRandomImages(req.query.limit);
     })();
 
-    if(!imageMetadata.success){ return res.json(imageMetadata); }
     res.json(imageMetadata);
 });
 

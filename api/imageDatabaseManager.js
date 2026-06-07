@@ -20,7 +20,7 @@ function getAllImages(){
 
 function getRandomImages(limit=3){
     const getRandomStatement = db.prepare(`SELECT * FROM imageMetadata ORDER BY RANDOM() LIMIT ${limit};`);
-    
+
     try{ return { success: true, entries: getRandomStatement.all() }; }
     catch(err){ return { success: false, error: `Failed to get entries from database: ${err}` }; }
 };
