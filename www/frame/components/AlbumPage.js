@@ -39,6 +39,7 @@ AddStyle(/*css*/`
         padding: 10px 20px 10px 15px;
         height: 70px;
         font-size: 2rem;
+        cursor: pointer;
     }
 
     .album-page .header-row .back-button div{
@@ -80,6 +81,7 @@ export default class AlbumPage extends HTMLElement{
         `;
 
         this.querySelector('.back-button').addEventListener('click', () => this.dispatchEvent(new Event('back')));
+        this.querySelector('.upload-photos-button').addEventListener('click', () => this.querySelector('.qr-popup').classList.remove('hidden'));
     };
 
     async toggleVisible(showPage=true){

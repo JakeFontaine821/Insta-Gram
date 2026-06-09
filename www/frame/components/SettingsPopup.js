@@ -48,6 +48,7 @@ AddStyle(/*css*/`
         padding: 10px 20px 10px 15px;
         height: 70px;
         font-size: 2rem;
+        cursor: pointer;
     }
 
     .settings-popup .popup-container .back-button div{
@@ -61,6 +62,7 @@ AddStyle(/*css*/`
         padding: 20px;
         border-top: 2px solid var(--accent);
         border-right: 2px solid var(--accent);
+        cursor: pointer;
     }
 
     .settings-popup .popup-container > .tabs > .tab.selected{

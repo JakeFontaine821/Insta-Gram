@@ -1,6 +1,7 @@
 import AddStyle from '../js/Styles.js';
 import './LandingPage.js';
 import './AlbumPage.js';
+import './SlideshowPage.js';
 
 AddStyle(`
     .frame-root-page{
@@ -18,10 +19,12 @@ export default class FrameRootPage extends HTMLElement{
         this.innerHTML = `
             <landing-page></landing-page>
             <album-page></album-page>
+            <slideshow-page></slideshow-page>
         `;
 
         const LandingPage = document.querySelector('.landing-page');
         const AlbumPage = document.querySelector('.album-page');
+        const SlideshowPage = document.querySelector('.slideshow-page');
 
         const swapPages = (showLanding=true) => {
             LandingPage.classList.toggle('hidden', !showLanding);

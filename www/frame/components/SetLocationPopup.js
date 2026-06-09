@@ -39,6 +39,7 @@ AddStyle(/*css*/`
         border-radius: 35px;
         padding: 10px 20px 10px 15px;
         height: 70px;
+        cursor: pointer;
     }
 
     .set-location-popup .popup-container .back-button div{

@@ -41,6 +41,7 @@ AddStyle(/*css*/`
 
         background: var(--background);
         border-radius: 20px;
+        cursor: pointer;
     }
 
     /********************************* PHOTOS BUTTON ******************************/
@@ -362,6 +363,24 @@ export default class LandingPage extends HTMLElement{
         const settingsButton = this.querySelector('.settings-button');
         const settingsPopup = this.querySelector('.settings-popup');
         settingsButton.addEventListener('click', () => settingsPopup.show());
+    };
+
+    async toggleVisible(showPage=true){
+        // const albumList = this.querySelector('.album-list-inner');
+
+        // TODO copy AlbumPage functionality but custom suited for this page
+        // for optimization so the photos dont keep going if we're not on this page
+        if(showPage){
+            this.classList.remove('hidden');
+
+            // Load photos and start timeout recursion
+        }
+        else{
+            this.classList.add('hidden');
+            while(albumList.firstChild){ albumList.firstChild.remove(); }
+
+            // clear timeout
+        }
     };
 };
 customElements.define('landing-page', LandingPage);
