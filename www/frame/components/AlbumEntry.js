@@ -63,16 +63,21 @@ export default class AlbumEntry extends HTMLElement{
         const photoDiv = this.querySelector('.photo');
         const loadPhoto = async () => {
             const imageMetadata = await sendRequest(`/images/random?limit=1${this.albumId ? `&albumId=${this.albumId}` : ''}`);
-            if(!imageMetadata.success || !imageMetadata.entries.length){ return setTimeout(loadPhoto, 1000); }
+            if(!imageMetadata.success || !imageMetadata.entries.length){ return this.loadImageTimeout = setTimeout(() => loadPhoto(), 1000); }
 
             photoDiv.style.backgroundImage = `url(${imageMetadata.entries[0].file_path})`;
             photoDiv.style.animation = 'none';
             photoDiv.offsetWidth;
             photoDiv.style.animation = 'imageFade 10s';
 
-            setTimeout(loadPhoto, 5000);
+            this.loadImageTimeout = setTimeout(() => loadPhoto(), 5000);
         };
         loadPhoto();
+    };
+
+    clear(){
+        clearTimeout(this.loadImageTimeout);
+        this.remove();
     };
 };
 customElements.define('album-entry', AlbumEntry);

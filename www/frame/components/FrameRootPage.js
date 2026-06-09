@@ -27,7 +27,7 @@ export default class FrameRootPage extends HTMLElement{
         const SlideshowPage = document.querySelector('.slideshow-page');
 
         const swapPages = (showLanding=true) => {
-            LandingPage.classList.toggle('hidden', !showLanding);
+            LandingPage.toggleVisible(showLanding);
             AlbumPage.toggleVisible(!showLanding); // Album page has special functions
         };
 

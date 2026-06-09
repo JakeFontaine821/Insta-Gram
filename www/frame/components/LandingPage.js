@@ -264,26 +264,9 @@ export default class LandingPage extends HTMLElement{
         /*                              PHOTOS BUTTON                                          */
         /***************************************************************************************/
         const photosButton = this.querySelector('.photos-button');
-        const photosContainers = Array.from(photosButton.children);
-        const loadPhotos = async () => { // TODO stop this if page isnt shown, same as AlbumPage
-            const imageMetadata = await sendRequest('/images/random?limit=4');
-            if(!imageMetadata.success || !imageMetadata.entries.length){ return setTimeout(loadPhotos, 10000); }
-
-            // Set the new photo and restart the animation
-            for(const [i, div] of photosContainers.entries()){
-                div.style.backgroundImage = `url(${imageMetadata.entries[i].file_path})`;
-                div.style.animation = 'none';
-                div.offsetWidth;
-                div.style.animation = 'imageFade 10s';
-
-                await new Promise(resolve => setTimeout(resolve, 500));
-            }
-
-            setTimeout(loadPhotos, 10000);
-        };
-        loadPhotos();
-
         photosButton.addEventListener('click', () => this.dispatchEvent(new Event('photos')));
+
+        this.loadPhotos();
 
         /***************************************************************************************/
         /*                              CLOCK BUTTON                                           */
@@ -365,21 +348,33 @@ export default class LandingPage extends HTMLElement{
         settingsButton.addEventListener('click', () => settingsPopup.show());
     };
 
-    async toggleVisible(showPage=true){
-        // const albumList = this.querySelector('.album-list-inner');
+    async loadPhotos(){
+        const photosContainers = Array.from(this.querySelector('.photos-button').children);
+        const imageMetadata = await sendRequest('/images/random?limit=4');
+        if(!imageMetadata.success || !imageMetadata.entries.length){ return this.loadImageTimeout = setTimeout(() => this.loadPhotos(), 10000); }
 
-        // TODO copy AlbumPage functionality but custom suited for this page
-        // for optimization so the photos dont keep going if we're not on this page
+        // Set the new photo and restart the animation
+        for(const [i, div] of photosContainers.entries()){
+            div.style.backgroundImage = `url(${imageMetadata.entries[i].file_path})`;
+            div.style.animation = 'none';
+            div.offsetWidth;
+            div.style.animation = 'imageFade 10s';
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
+        this.loadImageTimeout = setTimeout(() => this.loadPhotos(), 10000);
+    };
+
+    async toggleVisible(showPage=true){
         if(showPage){
             this.classList.remove('hidden');
-
-            // Load photos and start timeout recursion
+            this.loadPhotos();
         }
         else{
             this.classList.add('hidden');
-            while(albumList.firstChild){ albumList.firstChild.remove(); }
-
-            // clear timeout
+            clearTimeout(this.loadImageTimeout);
+            this.loadImageTimeout = null;
         }
     };
 };

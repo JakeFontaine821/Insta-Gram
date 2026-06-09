@@ -37,7 +37,7 @@ export default class SlideshowPage extends HTMLElement{
     constructor(albumId){
         super();
 
-        this.classList.add('slideshow-page');
+        this.classList.add('slideshow-page', 'hidden');
 
         this.innerHTML = `
             <div class="header-row">

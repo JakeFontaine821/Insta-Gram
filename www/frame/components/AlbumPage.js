@@ -111,7 +111,7 @@ export default class AlbumPage extends HTMLElement{
         }
         else{
             this.classList.add('hidden');
-            while(albumList.firstChild){ albumList.firstChild.remove(); }
+            while(albumList.firstChild){ albumList.firstChild.clear(); }
         }
     };
 };
