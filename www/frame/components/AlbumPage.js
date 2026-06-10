@@ -80,7 +80,7 @@ export default class AlbumPage extends HTMLElement{
             <qr-popup></qr-popup>
         `;
 
-        this.querySelector('.back-button').addEventListener('click', () => this.dispatchEvent(new Event('back')));
+        this.querySelector('.back-button').addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'landing' })));
         this.querySelector('.upload-photos-button').addEventListener('click', () => this.querySelector('.qr-popup').classList.remove('hidden'));
     };
 
@@ -98,12 +98,14 @@ export default class AlbumPage extends HTMLElement{
 
             // Create and handle an all photos album
             const allPhotosAlbum = new AlbumEntry({ albumName: 'All Photos', numberOfPhotos: photoCountResponse.count["COUNT(*)"] });
+            allPhotosAlbum.addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'slideshow' })));
             albumList.appendChild(allPhotosAlbum);
             await new Promise(resolve => setTimeout(resolve, 250));
 
             // Create actual albums
             for(const album of albumsResponse.entries){
                 const newAlbumEntry = new AlbumEntry(album);
+                newAlbumEntry.addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'slideshow' })));
                 albumList.appendChild(newAlbumEntry);
 
                 await new Promise(resolve => setTimeout(resolve, 250));

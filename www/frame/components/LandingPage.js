@@ -264,7 +264,7 @@ export default class LandingPage extends HTMLElement{
         /*                              PHOTOS BUTTON                                          */
         /***************************************************************************************/
         const photosButton = this.querySelector('.photos-button');
-        photosButton.addEventListener('click', () => this.dispatchEvent(new Event('photos')));
+        photosButton.addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'albums' })));
 
         this.loadPhotos();
 

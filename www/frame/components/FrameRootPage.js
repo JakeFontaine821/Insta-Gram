@@ -22,17 +22,27 @@ export default class FrameRootPage extends HTMLElement{
             <slideshow-page></slideshow-page>
         `;
 
-        const LandingPage = document.querySelector('.landing-page');
-        const AlbumPage = document.querySelector('.album-page');
-        const SlideshowPage = document.querySelector('.slideshow-page');
-
-        const swapPages = (showLanding=true) => {
-            LandingPage.toggleVisible(showLanding);
-            AlbumPage.toggleVisible(!showLanding); // Album page has special functions
+        const pages = {
+            'landing': document.querySelector('.landing-page'),
+            'albums': document.querySelector('.album-page'),
+            'slideshow': document.querySelector('.slideshow-page')
         };
 
-        LandingPage.addEventListener('photos', () => swapPages(false));
-        AlbumPage.addEventListener('back', () => swapPages(true));
+        const swapPages = (page) => {
+            console.log(page)
+            for(const [ pageKey, pageElement ] of Object.entries(pages)){
+                pageElement.toggleVisible(page === pageKey);
+            }
+            // LandingPage.toggleVisible(showLanding);
+            // AlbumPage.toggleVisible(!showLanding); // Album page has special functions
+        };
+
+        for(const [ pageKey, pageElement ] of Object.entries(pages)){
+            pageElement.addEventListener('switchpages', ({page}) => swapPages(page));
+        }
+
+        // LandingPage.addEventListener('photos', ({page}) => swapPages(page));
+        // AlbumPage.addEventListener('back', ({page}) => swapPages(page));
     };
 };
 customElements.define('frame-root-page', FrameRootPage);

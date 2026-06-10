@@ -47,6 +47,19 @@ export default class SlideshowPage extends HTMLElement{
                 </div>
             </div>
         `;
+
+        this.querySelector('.back-button').addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'albums' })));
+    };
+
+    async toggleVisible(showPage=true){
+        if(showPage){
+            this.classList.remove('hidden');
+
+        }
+        else{
+            this.classList.add('hidden');
+
+        }
     };
 };
 customElements.define('slideshow-page', SlideshowPage);
