@@ -100,7 +100,7 @@ export default class AlbumPage extends HTMLElement{
             const allPhotosAlbum = new AlbumEntry({ albumName: 'All Photos', numberOfPhotos: photoCountResponse.count["COUNT(*)"] });
             allPhotosAlbum.addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'slideshow' })));
             albumList.appendChild(allPhotosAlbum);
-            await new Promise(resolve => setTimeout(resolve, 250));
+            await new Promise(resolve => setTimeout(resolve, 100));
 
             // Create actual albums
             for(const album of albumsResponse.entries){
@@ -108,7 +108,7 @@ export default class AlbumPage extends HTMLElement{
                 newAlbumEntry.addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'slideshow' })));
                 albumList.appendChild(newAlbumEntry);
 
-                await new Promise(resolve => setTimeout(resolve, 250));
+                await new Promise(resolve => setTimeout(resolve, 100));
             }
         }
         else{

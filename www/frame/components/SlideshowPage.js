@@ -1,9 +1,16 @@
 import AddStyle from '../js/Styles.js';
+import { sendRequest } from '../js/utils.js';
 
 AddStyle(/*css*/`
     .slideshow-page{
         height: 100vh;
         width: 100vw;
+        display: flex;
+        opacity: 0%;
+        background-color: black;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
     }
 
     .slideshow-page .header-row{
@@ -34,7 +41,7 @@ AddStyle(/*css*/`
 `);
 
 export default class SlideshowPage extends HTMLElement{
-    constructor(albumId){
+    constructor(){
         super();
 
         this.classList.add('slideshow-page', 'hidden');
@@ -48,18 +55,37 @@ export default class SlideshowPage extends HTMLElement{
             </div>
         `;
 
+        this.albumId = null;
+
         this.querySelector('.back-button').addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'albums' })));
+    };
+
+    async loadPhotos(){
+        const imageMetadata = await sendRequest(`/images/random?limit=1${this.albumId ? `&albumId=${this.albumId}` : ''}`);
+        if(!imageMetadata.success || !imageMetadata.entries.length){ return this.loadImageTimeout = setTimeout(() => this.loadPhotos(), 10000); }
+
+        this.style.backgroundImage = `url(${imageMetadata.entries[0].file_path})`;
+        this.style.animation = 'none';
+        this.offsetWidth;
+        this.style.animation = 'imageFade 10s';
+
+        this.loadImageTimeout = setTimeout(() => this.loadPhotos(), 10000);
     };
 
     async toggleVisible(showPage=true){
         if(showPage){
             this.classList.remove('hidden');
-
+            this.loadPhotos();
         }
         else{
             this.classList.add('hidden');
-
+            clearTimeout(this.loadImageTimeout);
+            this.loadImageTimeout = null;
         }
+    };
+
+    setAlbum(albumId){ // TODO, currently never called. Need to call lel
+        this.albumId = albumId;
     };
 };
 customElements.define('slideshow-page', SlideshowPage);
