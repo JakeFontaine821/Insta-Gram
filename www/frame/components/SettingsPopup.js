@@ -187,7 +187,7 @@ export default class SettingsPopup extends HTMLElement{
 
                 </div>
             </div>
-        `;
+        `; // TODO Add a power down button
 
         const backButton = this.querySelector('.back-button');
         backButton.addEventListener('click', () => this.classList.add('hidden'));

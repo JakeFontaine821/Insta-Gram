@@ -82,7 +82,7 @@ export default class AlbumPage extends HTMLElement{
 
         this.querySelector('.back-button').addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'landing' })));
         this.querySelector('.upload-photos-button').addEventListener('click', () => this.querySelector('.qr-popup').classList.remove('hidden'));
-    };
+    }; // TODO hook up to server events
 
     async toggleVisible(showPage=true){
         const albumList = this.querySelector('.album-list-inner');

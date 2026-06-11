@@ -40,8 +40,14 @@ function addImage(metaData){
     return { success: true };
 };
 
-const getAllImagesCount = db.prepare(`SELECT COUNT(*) FROM imageMetadata`);
 function totalImageCount(){
+    const getAllImagesCount = db.prepare(`SELECT COUNT(*) FROM imageMetadata`);
+    const count = getAllImagesCount.get();
+    return { success: true, count };
+};
+
+function totalImageCount_album(albumId){
+    const getAllImagesCount = db.prepare(`SELECT COUNT(*) FROM imageMetadata WHERE album_ids LIKE '%${albumId}%'`);
     const count = getAllImagesCount.get();
     return { success: true, count };
 };
@@ -51,5 +57,6 @@ module.exports = {
     getRandomImages,
     getRandomImages_album,
     addImage,
-    totalImageCount
+    totalImageCount,
+    totalImageCount_album
 };

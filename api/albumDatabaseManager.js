@@ -1,6 +1,7 @@
 const path = require('path');
 const Database = require('better-sqlite3');
 const db = new Database(path.join(__dirname, './database.db'));
+const ImageDatabaseManager = require(path.join(__dirname, '/imageDatabaseManager.js'));
 
 db.prepare(`
     CREATE TABLE IF NOT EXISTS albums (
@@ -43,15 +44,13 @@ function createNewAlbum(album_name){
 
 const updateAlbumPhotoCount = db.prepare(`UPDATE albums SET number_of_photos=@number_of_photos WHERE album_id=@album_id`);
 function incrementPhotoCount(album_id){
-    const albumObject = getAlbumStatement.get({ album_id });
-    if(!albumObject){ return { success: false, error: `No album found with album_id: ${album_id}` }; }
+    const imageCount = ImageDatabaseManager.totalImageCount_album(album_id);
+    if(!imageCount){ return { success: false, error: `No album found with album_id: ${album_id}` }; }
 
-    const incrementedCount = albumObject.number_of_photos + 1;
-
-    try{ updateAlbumPhotoCount.run({ album_id, number_of_photos: incrementedCount }); }
+    try{ updateAlbumPhotoCount.run({ album_id, number_of_photos: imageCount.count }); }
     catch(err){ return { success: false, error: `Failed to increment photo count: ${err}` }; }
 
-    return { success: true, count: incrementedCount };
+    return { success: true, count: imageCount.count };
 };
 
 const updateAlbumName = db.prepare(`UPDATE albums SET album_name=@album_name WHERE album_id=@album_id`);
