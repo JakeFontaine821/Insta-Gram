@@ -202,14 +202,16 @@ export default class SlideshowPage extends HTMLElement{
             this.loadPhoto();
         }
         else{
-            this.classList.add('hidden');
-
-            // Stop loading images
-            this.stopSlideshow();
+            if(this.classList.contains('hidden')){ return; } // Page already hidden, return
 
             // Hide the header and footer
             clearTimeout(this.tapTimeout);
             this.classList.remove('tapped');
+
+            // Stop loading images
+            this.stopSlideshow();
+
+            this.classList.add('hidden');
         }
     };
 };

@@ -168,9 +168,8 @@ export default class SettingsPopup extends HTMLElement{
                             <div class="background"></div>
                             <div class="fill"></div>
                         </div>
-                        <div class="used"></div>
-                        <div class="free"></div>
-                        <div class="estimate"></div>
+                        <div class="storage-info"></div>
+                        <div class="image-info"></div>
                     </div>
 
                     <div class="credits-panel hidden">
@@ -211,18 +210,17 @@ export default class SettingsPopup extends HTMLElement{
         const storageResponse = await sendRequest('/frame/storage');
         const free = storageResponse.data.free / 1000000000; // converting bytes to gigabytes
         const total = storageResponse.data.total / 1000000000; // converting bytes to gigabytes
-        
+
         const imageCountResponse = await sendRequest('/frame/storage/count');
         const photoCount = imageCountResponse.count["COUNT(*)"];
-        
+
         const percentStorageUsed = ((total - free) / total) * 100;
         const fillBar = this.querySelector('.storage-panel .bar .fill');
         fillBar.style.width = `${percentStorageUsed}%`;
         fillBar.style.backgroundColor = percentStorageUsed < 75 ? 'green' : percentStorageUsed < 85 ? 'yellow' : percentStorageUsed < 95 ? 'orange' : 'red';
 
-        this.querySelector('.storage-panel .used').innerHTML = `You've used ${Math.round(total - free)}gb of storage`;
-        this.querySelector('.storage-panel .free').innerHTML = `There is ${Math.round(free)}gb remaining`;
-        this.querySelector('.storage-panel .estimate').innerHTML = photoCount ? `You can add about ${Math.round((total / free) * photoCount)} more photos` : '';
+        this.querySelector('.storage-panel .storage-info').innerHTML = `You've used ${Math.round(total - free)}gb of storage and there is ${Math.round(free)}gb remaining`;
+        this.querySelector('.storage-panel .image-info').innerHTML = photoCount ? `There are currently ${photoCount} photos uploaded, you can upload about ${Math.round((total / free) * photoCount)} more photos` : '';
     };
     
     async loadWifiPanel(){
@@ -250,6 +248,8 @@ export default class SettingsPopup extends HTMLElement{
         }];
 
         const wifiList = this.querySelector('.wifi-panel .list-inner');
+        while(wifiList.firstChild){ wifiList.firstChild.remove(); }
+
         for(const network of a/*wifiResponse.networks*/){
             const newWifiEntry = new WifiEntry(network);
 

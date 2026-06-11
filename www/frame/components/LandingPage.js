@@ -367,6 +367,8 @@ export default class LandingPage extends HTMLElement{
             this.loadPhotos();
         }
         else{
+            if(this.classList.contains('hidden')){ return; } // Page already hidden, return
+
             this.classList.add('hidden');
             clearTimeout(this.loadImageTimeout);
             this.loadImageTimeout = null;
