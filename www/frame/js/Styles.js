@@ -117,6 +117,13 @@ AddStyle(/*css*/`
         to { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
+    @keyframes imageFade {
+        0%   { opacity: 0%; }
+        15%  { opacity: 100%; }
+        85%  { opacity: 100%; }
+        100% { opacity: 0%; }
+    }
+
     /* Width of the scrollbar */
     ::-webkit-scrollbar {
         width: 5px;

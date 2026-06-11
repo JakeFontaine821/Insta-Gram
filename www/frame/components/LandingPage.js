@@ -61,12 +61,7 @@ AddStyle(/*css*/`
         opacity: 0%;
     }
     
-    @keyframes imageFade {
-        0%   { opacity: 0%; }
-        25%  { opacity: 100%; }
-        75%  { opacity: 100%; }
-        100% { opacity: 0%; }
-    }
+    
 
     /********************************* CLOCK BUTTON ******************************/
     .landing-page .clock-button{

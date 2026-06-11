@@ -28,21 +28,15 @@ export default class FrameRootPage extends HTMLElement{
             'slideshow': document.querySelector('.slideshow-page')
         };
 
-        const swapPages = (page) => {
-            console.log(page)
+        const swapPages = (page, albumId) => {
             for(const [ pageKey, pageElement ] of Object.entries(pages)){
-                pageElement.toggleVisible(page === pageKey);
+                pageElement.toggleVisible(page === pageKey, albumId);
             }
-            // LandingPage.toggleVisible(showLanding);
-            // AlbumPage.toggleVisible(!showLanding); // Album page has special functions
         };
 
         for(const [ pageKey, pageElement ] of Object.entries(pages)){
-            pageElement.addEventListener('switchpages', ({page}) => swapPages(page));
+            pageElement.addEventListener('switchpages', ({page, albumId}) => swapPages(page, albumId));
         }
-
-        // LandingPage.addEventListener('photos', ({page}) => swapPages(page));
-        // AlbumPage.addEventListener('back', ({page}) => swapPages(page));
     };
 };
 customElements.define('frame-root-page', FrameRootPage);

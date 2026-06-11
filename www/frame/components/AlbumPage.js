@@ -26,7 +26,7 @@ AddStyle(/*css*/`
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 20px 20px;
+        padding: 20px;
     }
 
     .album-page .header-row > div{
@@ -105,7 +105,7 @@ export default class AlbumPage extends HTMLElement{
             // Create actual albums
             for(const album of albumsResponse.entries){
                 const newAlbumEntry = new AlbumEntry(album);
-                newAlbumEntry.addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'slideshow' })));
+                newAlbumEntry.addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'slideshow', albumId: newAlbumEntry.albumId })));
                 albumList.appendChild(newAlbumEntry);
 
                 await new Promise(resolve => setTimeout(resolve, 100));
