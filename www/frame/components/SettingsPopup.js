@@ -151,6 +151,7 @@ export default class SettingsPopup extends HTMLElement{
                         </div>
                     </div>
                     <div class="about-tab tab selected" panel="about-panel">About</div>
+                    <div class="image-tab tab" panel="image-panel">Image Manager</div>
                     <div class="wifi-tab tab" panel="wifi-panel">Wifi</div>
                     <div class="storage-tab tab" panel="storage-panel">Storage</div>
                     <div class="credits-tab tab" panel="credits-panel">Credits</div>
@@ -163,6 +164,10 @@ export default class SettingsPopup extends HTMLElement{
                         <div>Insta-Gram is a digital picture frame made inspite of all the frames my grandmother has tried in the past</div>
                         <div>We've had very poor luck with all frames encountering serious issues</div>
                         <div>Finally I thought, I can build a better one, so I did. Hope you enjoy :)</div>
+                    </div>
+
+                    <div class="image-panel hidden">
+                        Image Manager
                     </div>
 
                     <div class="wifi-panel hidden">
@@ -206,7 +211,7 @@ export default class SettingsPopup extends HTMLElement{
         const backButton = this.querySelector('.back-button');
         backButton.addEventListener('click', () => this.classList.add('hidden'));
 
-        for(const tabClass of ['.about-tab', '.wifi-tab', '.storage-tab', '.credits-tab', '.power-tab']){
+        for(const tabClass of ['.about-tab', '.image-tab', '.wifi-tab', '.storage-tab', '.credits-tab', '.power-tab']){
             const tab = this.querySelector(tabClass);
 
             tab.addEventListener('click', () => {
@@ -221,6 +226,8 @@ export default class SettingsPopup extends HTMLElement{
 
         this.querySelector('.power-button').addEventListener('click', () => sendRequest('/frame/poweroff'));
     };
+
+    // TODO image manager to fix potential user errors at runtime
 
     async loadStoragePanel(){
         const storageResponse = await sendRequest('/frame/storage');
