@@ -85,6 +85,9 @@ app.post('/frame/wifi/forget', async (req, res) => res.json(await SettingsUtils.
 app.get('/frame/storage', async (req, res) => res.json(await SettingsUtils.getStorage()));
 app.get('/frame/storage/count', async (req, res) => res.json(await ImageDatabaseManager.totalImageCount()));
 
+// Power down listener
+app.get('/frame/poweroff', (req, res) => SettingsUtils.shutdownSystem());
+
 /****************************************************************************************************/
 /*                              SENDER SPECIFIC ENDPOINTS                                           */
 /****************************************************************************************************/

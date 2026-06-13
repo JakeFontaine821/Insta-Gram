@@ -125,6 +125,14 @@ AddStyle(/*css*/`
         height: 100%;
         background-color: #efefef;
     }
+
+    .settings-popup .popup-container .power-panel .power-button{
+        background: red;
+        border: 2px solid black;
+        border-radius: 15px;
+        padding: 20px;
+        cursor: pointer;
+    }
 `);
 
 export default class SettingsPopup extends HTMLElement{
@@ -145,7 +153,8 @@ export default class SettingsPopup extends HTMLElement{
                     <div class="about-tab tab selected" panel="about-panel">About</div>
                     <div class="wifi-tab tab" panel="wifi-panel">Wifi</div>
                     <div class="storage-tab tab" panel="storage-panel">Storage</div>
-                    <div class="credits-tab tab last" panel="credits-panel">Credits</div>
+                    <div class="credits-tab tab" panel="credits-panel">Credits</div>
+                    <div class="power-tab tab last" panel="power-panel">Power Off</div>
                     <div class="empty"></div>
                 </div>
                 <div class="panels">
@@ -185,14 +194,19 @@ export default class SettingsPopup extends HTMLElement{
                         <div>Jason :)</div>
                     </div>
 
+                    <div class="power-panel hidden">
+                        <div>Button to gracfully shutdown the system :)</div>
+                        <div class="power-button">Power Off</div>
+                    </div>
+
                 </div>
             </div>
-        `; // TODO Add a power down button
+        `;
 
         const backButton = this.querySelector('.back-button');
         backButton.addEventListener('click', () => this.classList.add('hidden'));
 
-        for(const tabClass of ['.about-tab', '.wifi-tab', '.storage-tab', '.credits-tab']){
+        for(const tabClass of ['.about-tab', '.wifi-tab', '.storage-tab', '.credits-tab', '.power-tab']){
             const tab = this.querySelector(tabClass);
 
             tab.addEventListener('click', () => {
@@ -204,6 +218,8 @@ export default class SettingsPopup extends HTMLElement{
                 this.querySelector(`.panels .${tab.getAttribute('panel')}`).classList.remove('hidden');
             });
         }
+
+        this.querySelector('.power-button').addEventListener('click', () => sendRequest('/frame/poweroff'));
     };
 
     async loadStoragePanel(){

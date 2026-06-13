@@ -72,12 +72,29 @@ async function getStorage(){
     return { success: true, data };
 };
 
+/****************************************Power Utils */
+const { exec } = require('child_process');
+const shutdownSystem = () => {
+    const platform = process.platform;
+    let command = '';
+
+    if (platform === 'win32') { /*Windows*/command = 'shutdown /s /t 0'; }
+    else if (platform === 'linux' || platform === 'darwin') { /*Linux and MacOS*/command = 'shutdown -h now'; } 
+    else { /*Why tf would this ever run*/return console.error(`Unsupported OS platform: ${platform}`); }
+
+    exec(command, (error, stdout, stderr) => {
+        if(error){ return console.error(`Failed to initiate shutdown: ${error.message}`); }
+        console.log('Shutdown command sent successfully.');
+    });
+};
+
 module.exports = {
     getWifiNetworks,
     setWifiNetwork,
     disconnectWifiNetwork,
     forgetNetwork,
-    getStorage
+    getStorage,
+    shutdownSystem
 };
 
 // const confirmResponse = wifi.getCurrentConnections((error, connections) => {
