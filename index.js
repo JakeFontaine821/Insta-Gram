@@ -131,6 +131,9 @@ app.post('/sender/photo/save', upload.single('imageFile'), (req, res) => {
     if (!metadata.sentBy) { return res.json({ success: false, error: 'Missing required field: \'sentBy\'' }); }
     if (!metadata.albumIds) { return res.json({ success: false, error: 'Missing required field: \'albumIds\'' }); }
     if (!metadata.dateAdded) { return res.json({ success: false, error: 'Missing required field: \'dateAdded\'' }); }
+
+    const imageSaveResponse = ImageDatabaseManager.addImage(Object.assign(metadata, { filePath: `/${req.file.path}` }));
+    if(imageSaveResponse.success){ broadcast('imagesaved'); }
     
     const parsedAlbumIds = JSON.parse(metadata.albumIds);
     for(const albumId of parsedAlbumIds){
@@ -138,9 +141,7 @@ app.post('/sender/photo/save', upload.single('imageFile'), (req, res) => {
         if(!incremenetResponse.success){ continue; }
         broadcast('albumcount', { albumId, count: incremenetResponse.count });
     }
-    
-    const imageSaveResponse = ImageDatabaseManager.addImage(Object.assign(metadata, { filePath: `/${req.file.path}` }));
-    if(imageSaveResponse.success){ broadcast('imagesaved'); }
+
     return res.json(imageSaveResponse);
 });
 

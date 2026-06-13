@@ -20,17 +20,21 @@
             console.log('Received:', JSON.parse(event.data));
         };
 
-        // eventSource.addEventListener('imagesaved', () => {
-        //     document.querySelector('settings-popup').loadStoragePanel();
-        // });
-        // TODO Frame should listen to when images are uploaded not album specific events
+        eventSource.addEventListener('albumreload', () => {
+            console.log('albums reloading')
+            document.querySelector('.album-page').reloadAlbums();
+        });
 
-        // eventSource.addEventListener('albumcount', ({data}) => {
-        //     const albumData = JSON.parse(data);
-        //     const albumEntries = document.querySelectorAll(`.${albumData.albumId}`);
-        //     for(const entry of albumEntries){ entry.updateCount(albumData.count); }
-        // });
+        eventSource.addEventListener('albumcount', ({data}) => {
+            const albumData = JSON.parse(data);
+            const albumEntries = document.querySelectorAll(`.${albumData.albumId}`);
+            for(const entry of albumEntries){ entry.updateCount(albumData.count); }
+        });
 
+        eventSource.addEventListener('imagesaved', () => {
+            document.querySelector('.settings-popup').loadStoragePanel();
+            document.querySelector('.album-page').updateAllPhotosAlbum();
+        });
     </script>
 </body>
 </html>

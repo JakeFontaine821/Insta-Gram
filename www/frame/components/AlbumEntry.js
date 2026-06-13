@@ -49,7 +49,7 @@ export default class AlbumEntry extends HTMLElement{
     constructor(albumInfo={}){
         super();
 
-        this.classList.add('album-entry');
+        this.classList.add('album-entry', albumInfo.albumId);
 
         this.innerHTML = `
             <div class="photo"></div>
@@ -73,6 +73,10 @@ export default class AlbumEntry extends HTMLElement{
             this.loadImageTimeout = setTimeout(() => loadPhoto(), 5000);
         };
         loadPhoto();
+    };
+
+    updateCount(newCount){
+        this.querySelector('.photo-count').innerHTML = newCount;
     };
 
     clear(){

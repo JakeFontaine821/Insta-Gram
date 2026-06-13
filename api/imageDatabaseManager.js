@@ -43,13 +43,13 @@ function addImage(metaData){
 function totalImageCount(){
     const getAllImagesCount = db.prepare(`SELECT COUNT(*) FROM imageMetadata`);
     const count = getAllImagesCount.get();
-    return { success: true, count };
+    return { success: true, count: count['COUNT(*)'] };
 };
 
 function totalImageCount_album(albumId){
     const getAllImagesCount = db.prepare(`SELECT COUNT(*) FROM imageMetadata WHERE album_ids LIKE '%${albumId}%'`);
     const count = getAllImagesCount.get();
-    return { success: true, count };
+    return { success: true, count: count['COUNT(*)'] };
 };
 
 module.exports = {

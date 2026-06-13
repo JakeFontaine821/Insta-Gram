@@ -82,38 +82,55 @@ export default class AlbumPage extends HTMLElement{
 
         this.querySelector('.back-button').addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'landing' })));
         this.querySelector('.upload-photos-button').addEventListener('click', () => this.querySelector('.qr-popup').classList.remove('hidden'));
-    }; // TODO hook up to server events
+    };
+
+    async reloadAlbums(){
+        if(this.classList.contains('hidden')){ return; }
+
+        const albumsResponse = await sendRequest('/frame/albums');
+        if(!albumsResponse.success){ setTimeout(() => this.toggleVisible(), 500); return; }
+
+        const photoCountResponse = await sendRequest('/frame/storage/count');
+        if(!photoCountResponse.success){ setTimeout(() => this.toggleVisible(), 500); return; }
+
+        // Clear existing albums if necessary
+        const albumList = this.querySelector('.album-list-inner');
+        while(albumList.firstChild){ albumList.firstChild.clear(); }
+
+        // Create and handle an all photos album
+        const allPhotosAlbum = new AlbumEntry({ albumName: 'All Photos', numberOfPhotos: photoCountResponse.count });
+        allPhotosAlbum.addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'slideshow' })));
+        albumList.appendChild(allPhotosAlbum);
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Create actual albums
+        for(const album of albumsResponse.entries){
+            const newAlbumEntry = new AlbumEntry(album);
+            newAlbumEntry.addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'slideshow', albumId: newAlbumEntry.albumId })));
+            albumList.appendChild(newAlbumEntry);
+
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+    };
+
+    async updateAllPhotosAlbum(){
+        if(this.classList.contains('hidden')){ return; }
+
+        const photoCountResponse = await sendRequest('/frame/storage/count');
+        if(!photoCountResponse.success){ setTimeout(() => this.toggleVisible(), 500); return; }
+
+        this.querySelector('.album-list-inner').firstChild.updateCount(photoCountResponse.count);
+    };
 
     async toggleVisible(showPage=true){
-        const albumList = this.querySelector('.album-list-inner');
-
         if(showPage){
             this.classList.remove('hidden');
-
-            const albumsResponse = await sendRequest('/frame/albums');
-            if(!albumsResponse.success){ setTimeout(() => this.toggleVisible(), 500); return; }
-
-            const photoCountResponse = await sendRequest('/frame/storage/count');
-            if(!photoCountResponse.success){ setTimeout(() => this.toggleVisible(), 500); return; }
-
-            // Create and handle an all photos album
-            const allPhotosAlbum = new AlbumEntry({ albumName: 'All Photos', numberOfPhotos: photoCountResponse.count["COUNT(*)"] });
-            allPhotosAlbum.addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'slideshow' })));
-            albumList.appendChild(allPhotosAlbum);
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            // Create actual albums
-            for(const album of albumsResponse.entries){
-                const newAlbumEntry = new AlbumEntry(album);
-                newAlbumEntry.addEventListener('click', () => this.dispatchEvent(Object.assign(new Event('switchpages'), { page: 'slideshow', albumId: newAlbumEntry.albumId })));
-                albumList.appendChild(newAlbumEntry);
-
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
+            this.reloadAlbums();
         }
         else{
             if(this.classList.contains('hidden')){ return; } // Page already hidden, return
             
+            const albumList = this.querySelector('.album-list-inner');
             while(albumList.firstChild){ albumList.firstChild.clear(); }
             this.classList.add('hidden');
         }

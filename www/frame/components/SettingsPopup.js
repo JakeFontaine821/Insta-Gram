@@ -195,7 +195,7 @@ export default class SettingsPopup extends HTMLElement{
                     </div>
 
                     <div class="power-panel hidden">
-                        <div>Button to gracfully shutdown the system :)</div>
+                        <div>Button to gracefully shutdown the system :)</div>
                         <div class="power-button">Power Off</div>
                     </div>
 
@@ -228,7 +228,7 @@ export default class SettingsPopup extends HTMLElement{
         const total = storageResponse.data.total / 1000000000; // converting bytes to gigabytes
 
         const imageCountResponse = await sendRequest('/frame/storage/count');
-        const photoCount = imageCountResponse.count["COUNT(*)"];
+        const photoCount = imageCountResponse.count;
 
         const percentStorageUsed = ((total - free) / total) * 100;
         const fillBar = this.querySelector('.storage-panel .bar .fill');

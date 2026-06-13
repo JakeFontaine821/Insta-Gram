@@ -350,6 +350,8 @@ export default class LandingPage extends HTMLElement{
 
         // Set the new photo and restart the animation
         for(const [i, div] of photosContainers.entries()){
+            if(!imageMetadata.entries[i]){ continue; }
+
             div.style.backgroundImage = `url(${imageMetadata.entries[i].file_path})`;
             div.style.animation = 'none';
             div.offsetWidth;
