@@ -312,7 +312,6 @@ export default class SettingsPopup extends HTMLElement{
             imageList.appendChild(newDiv);
             return;
         }
-        console.log(imagesResponse)
 
         for(const imageMetadata of imagesResponse.entries){
             const imageEntry = new ImageManagerEntry(imageMetadata);
