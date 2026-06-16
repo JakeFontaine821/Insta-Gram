@@ -60,6 +60,18 @@ AddStyle(/*css*/`
         background-color: var(--background);
     }
 
+    body select{
+        font-family: "Josefin Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.75rem;
+
+        text-align: center;
+        border: 1px solid transparent;
+        background-color: var(--background);
+    }
+
     body input:focus{
         outline: none;
     }

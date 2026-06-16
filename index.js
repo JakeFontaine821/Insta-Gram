@@ -73,6 +73,8 @@ app.post('/frame/weather/suggest', async (req, res) => res.json(await WeatherUti
 //     const response = await wifi.scan();
 //     console.log('response', response)
 // })();
+app.get('/frame/images/all', async (req, res) => res.json(await ImageDatabaseManager.getAllImages(req.query)));
+app.get('/frame/senders/all', async (req, res) => res.json(await ImageDatabaseManager.getAllSenders()));
 
 // https://github.com/friedrith/node-wifi
 app.get('/frame/wifi', async (req, res) => res.json(await SettingsUtils.getWifiNetworks()));

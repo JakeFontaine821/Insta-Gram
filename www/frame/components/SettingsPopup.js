@@ -1,6 +1,7 @@
 import AddStyle from '../js/Styles.js';
 import { sendRequest } from '../js/utils.js';
 import WifiEntry from './WifiEntry.js';
+import ImageManagerEntry from './ImageManagerEntry.js';
 
 AddStyle(/*css*/`
     .settings-popup{
@@ -133,6 +134,32 @@ AddStyle(/*css*/`
         padding: 20px;
         cursor: pointer;
     }
+
+    .settings-popup .popup-container .image-panel .panel-header{
+        width: 100%;
+        display: flex;
+        gap: 5px;
+    }
+
+    .settings-popup .popup-container .image-panel .panel-header > select{
+        flex: 1;
+        padding: 10px 0;
+        text-align: center;
+        border: 1px solid var(--accent);
+        border-radius: 25px;
+    }
+
+    .settings-popup .popup-container .image-panel .image-list-outer{
+        width: 100%;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .settings-popup .popup-container .image-panel .image-list-inner{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
 `);
 
 export default class SettingsPopup extends HTMLElement{
@@ -167,7 +194,15 @@ export default class SettingsPopup extends HTMLElement{
                     </div>
 
                     <div class="image-panel hidden">
-                        Image Manager
+                        <div class="panel-header">
+                            <select class="album-input">
+                            </select>
+                            <select class="sent-by-input">
+                            </select>
+                        </div>
+                        <div class="image-list-outer">
+                            <div class="image-list-inner"></div>
+                        </div>
                     </div>
 
                     <div class="wifi-panel hidden">
@@ -225,9 +260,67 @@ export default class SettingsPopup extends HTMLElement{
         }
 
         this.querySelector('.power-button').addEventListener('click', () => sendRequest('/frame/poweroff'));
+
+        // Filter update for the image panel, reload the list as specified
+        this.querySelector('.album-input').addEventListener('change', () => this.loadImageList());
+        this.querySelector('.sent-by-input').addEventListener('change', () => this.loadImageList());
     };
 
-    // TODO image manager to fix potential user errors at runtime
+    async loadImagePanel(){
+
+        // Handle the album select
+        const albumSelect = this.querySelector('.album-input');
+        while(albumSelect.firstChild){ albumSelect.firstChild.remove(); }
+        albumSelect.appendChild(new Option('Select Album', ''));
+
+        const albumsResponse = await sendRequest('/frame/albums');
+        if(albumsResponse.success && albumsResponse.entries.length){
+            for(const album of albumsResponse.entries){ albumSelect.appendChild(new Option(album.albumName, album.albumId)); }
+        }
+
+        // Handle the posted by select
+        const postedBySelect = this.querySelector('.sent-by-input');
+        while(postedBySelect.firstChild){ postedBySelect.firstChild.remove(); }
+        postedBySelect.appendChild(new Option('Select Sender', ''));
+
+        const sendersResponse = await sendRequest('/frame/senders/all');
+        if(sendersResponse.success && sendersResponse.entries.length){
+            for(const senderInfo of sendersResponse.entries){ postedBySelect.appendChild(new Option(senderInfo.sent_by, senderInfo.sent_by)); }
+        }
+
+        this.loadImageList();
+    };
+
+    async loadImageList(){
+        const albumSelect = this.querySelector('.album-input');
+        const postedBySelect = this.querySelector('.sent-by-input');
+        // Load the images
+        const queryParams = (() => {
+            let query = '?';
+            if(albumSelect.value !== ''){ query += `albumId=${albumSelect.value}&`; }
+            if(postedBySelect.value !== ''){ query += `sentBy=${postedBySelect.value}`; }
+            return query.length === 1 ? '' : query;
+        })();
+        const imagesResponse = await sendRequest(`/frame/images/all${queryParams}`);
+
+        const imageList = this.querySelector('.image-list-inner');
+        while(imageList.firstChild){ imageList.firstChild.remove(); }
+
+        if(!imagesResponse.success || !imagesResponse.entries.length){
+            const newDiv = document.createElement('div');
+            newDiv.innerHTML = 'No Images :(';
+            imageList.appendChild(newDiv);
+            return;
+        }
+        console.log(imagesResponse)
+
+        for(const imageMetadata of imagesResponse.entries){
+            const imageEntry = new ImageManagerEntry(imageMetadata);
+
+            imageList.appendChild(imageEntry);
+        }
+
+    };
 
     async loadStoragePanel(){
         const storageResponse = await sendRequest('/frame/storage');
@@ -286,6 +379,7 @@ export default class SettingsPopup extends HTMLElement{
         this.classList.remove('hidden');
         this.loadStoragePanel();
         this.loadWifiPanel();
+        this.loadImagePanel();
     };
 };
 customElements.define('settings-popup', SettingsPopup);

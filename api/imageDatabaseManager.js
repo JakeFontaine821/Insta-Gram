@@ -12,9 +12,28 @@ db.prepare(`
     )
 `).run();
 
-const getAllStatement = db.prepare(`SELECT * FROM imageMetadata`);
-function getAllImages(){
+function getAllImages(params){
+    const whereCondition = (() => {
+        let cond = '';
+        if(Object.keys(params).length){
+            cond = 'WHERE ';
+            if(params.albumId && !params.sentBy){ cond += `album_ids LIKE '%${params.albumId}%' `; }
+            else if(!params.albumId && params.sentBy){ cond += `sent_by='${params.sentBy}' `; }
+            else{ cond += `album_ids LIKE '%${params.albumId}%' AND sent_by='${params.sentBy}' `; }
+
+            return cond;
+        }
+        else{ return ''; }
+    })();
+
+    const getAllStatement = db.prepare(`SELECT * FROM imageMetadata ${whereCondition}ORDER BY id DESC`);
     try{ return { success: true, entries: getAllStatement.all() }; }
+    catch(err){ return { success: false, error: `Failed to get entries from database: ${err}` }; }
+};
+
+const getAllSendersStatment = db.prepare(`SELECT DISTINCT sent_by FROM imageMetadata;`)
+function getAllSenders(){
+    try{ return { success: true, entries: getAllSendersStatment.all() }; }
     catch(err){ return { success: false, error: `Failed to get entries from database: ${err}` }; }
 };
 
@@ -54,6 +73,7 @@ function totalImageCount_album(albumId){
 
 module.exports = {
     getAllImages,
+    getAllSenders,
     getRandomImages,
     getRandomImages_album,
     addImage,
