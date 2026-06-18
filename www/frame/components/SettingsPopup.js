@@ -2,6 +2,7 @@ import AddStyle from '../js/Styles.js';
 import { sendRequest } from '../js/utils.js';
 import WifiEntry from './WifiEntry.js';
 import ImageManagerEntry from './ImageManagerEntry.js';
+import SelectableAlbumEntry from './SelectableAlbumEntry.js';
 
 AddStyle(/*css*/`
     .settings-popup{
@@ -16,12 +17,13 @@ AddStyle(/*css*/`
     }
 
     .settings-popup .popup-container{
-        height: 80vh;
-        width: 70vw;
+        height: 85vh;
+        width: 85vw;
         background-color: var(--background);
         border-radius: 30px;
         display: flex;
         gap: 10px;
+        overflow: hidden;
     }
 
     .settings-popup .popup-container > div{
@@ -82,6 +84,7 @@ AddStyle(/*css*/`
 
     .settings-popup .popup-container > .panels{
         flex: 3;
+        overflow: hidden;
     }
 
     .settings-popup .popup-container > .panels > div{
@@ -135,6 +138,29 @@ AddStyle(/*css*/`
         cursor: pointer;
     }
 
+    .settings-popup .popup-container .image-panel{
+        width: 200%;
+        flex-direction: row !important;
+        gap: 0px !important;
+        padding: 0px !important;
+        translate: 0%;
+        transition: translate .2s;
+    }
+
+    .settings-popup .popup-container .image-panel.edit-page{
+        translate: -50%;
+    }
+
+    .settings-popup .popup-container .image-panel > div{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 20px;
+    }
+
     .settings-popup .popup-container .image-panel .panel-header{
         width: 100%;
         display: flex;
@@ -160,6 +186,69 @@ AddStyle(/*css*/`
         flex-direction: column;
         gap: 5px;
     }
+
+    .settings-popup .popup-container .image-panel .image-editor-page{
+        flex-direction: row;
+    }
+
+    .settings-popup .popup-container .image-panel .image-editor-page > div{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        flex: 1;
+    }
+
+    .settings-popup .popup-container .image-panel .image-editor-page .left > div{
+        padding: 20px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .settings-popup .popup-container .image-panel .image-editor-page .close-button{
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .settings-popup .popup-container .image-panel .image-editor-page .middle{
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+
+    .settings-popup .popup-container .image-panel .image-editor-page .left .bottom{
+        flex: 1;
+    }
+
+    .settings-popup .popup-container .image-panel .image-editor-page .image-display{
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 100%;
+        width: 100%;
+    }
+
+    .settings-popup .popup-container .image-panel .image-editor-page .album-list-outer{
+        width: 100%;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .settings-popup .popup-container .image-panel .image-editor-page .album-list-inner{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .settings-popup .popup-container .image-panel .image-editor-page .save-button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--g);
+        border: 2px solid var(--primary);
+        border-radius: 35px;
+        height: 70px;
+        cursor: pointer;
+    }
 `);
 
 export default class SettingsPopup extends HTMLElement{
@@ -168,13 +257,13 @@ export default class SettingsPopup extends HTMLElement{
         
         this.classList.add('settings-popup', 'hidden');
 
-        this.innerHTML = `
+        this.innerHTML = /*html*/`
             <div class="popup-container">
                 <div class="tabs">
                     <div class="back-tab">
                         <div class="back-button">
                             <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="1.75rem" viewBox="0 -860 960 960"><path d="M624-96 240-480l384-384 68 68-316 316 316 316-68 68Z"/></svg>
-                            <div>Back</div>
+                            <div>Close</div>
                         </div>
                     </div>
                     <div class="about-tab tab selected" panel="about-panel">About</div>
@@ -194,14 +283,44 @@ export default class SettingsPopup extends HTMLElement{
                     </div>
 
                     <div class="image-panel hidden">
-                        <div class="panel-header">
-                            <select class="album-input">
-                            </select>
-                            <select class="sent-by-input">
-                            </select>
+                        <div class="image-list-page">
+                            <div class="panel-header">
+                                <select class="album-input">
+                                </select>
+                                <select class="sent-by-input">
+                                </select>
+                            </div>
+                            <div class="image-list-outer">
+                                <div class="image-list-inner"></div>
+                            </div>
                         </div>
-                        <div class="image-list-outer">
-                            <div class="image-list-inner"></div>
+
+                        <div class="image-editor-page">
+                            <div class="left">
+                                <div class="top">
+                                    <div class="close-button">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px"><path d="M624-96 240-480l384-384 68 68-316 316 316 316-68 68Z"/></svg>
+                                        <div>Back</div>
+                                    </div>
+                                </div>
+                                <div class="middle">
+                                    Sent by:
+                                    <input class="sent-by-input"/>
+                                </div>
+                                <div class="bottom">
+                                    <div class="image-display"></div>
+                                </div>
+                            </div>
+                            <div class="right">
+                                <div class="album-list-outer">
+                                    <div class="album-list-inner"></div>
+                                </div>
+                                <div class="bottom">
+                                    <div class="save-button">
+                                        Save
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -264,6 +383,23 @@ export default class SettingsPopup extends HTMLElement{
         // Filter update for the image panel, reload the list as specified
         this.querySelector('.album-input').addEventListener('change', () => this.loadImageList());
         this.querySelector('.sent-by-input').addEventListener('change', () => this.loadImageList());
+
+        // Image metadata edit page setup
+        this.querySelector('.image-editor-page .close-button').addEventListener('click', () => this.loadImageList());
+
+        this.loadedImageId = null;
+        this.querySelector('.image-editor-page .save-button').addEventListener('click', async () => {
+            if(!this.loadedImageId){ return; }
+
+            const saveResponse = await sendRequest('/frame/images/update', { body: {
+                id: this.loadedImageId,
+                albumIds: JSON.stringify(Array.from(this.querySelectorAll('.image-editor-page .selectable-album-entry.selected'), albumEntry => albumEntry.id)),
+                sentBy: this.querySelector('.image-editor-page .sent-by-input').value
+            } });
+            if(!saveResponse.success){ return; }
+
+            this.loadImageList();
+        });
     };
 
     async loadImagePanel(){
@@ -292,6 +428,8 @@ export default class SettingsPopup extends HTMLElement{
     };
 
     async loadImageList(){
+        this.loadedImageId = null;
+
         const albumSelect = this.querySelector('.album-input');
         const postedBySelect = this.querySelector('.sent-by-input');
         // Load the images
@@ -316,9 +454,29 @@ export default class SettingsPopup extends HTMLElement{
         for(const imageMetadata of imagesResponse.entries){
             const imageEntry = new ImageManagerEntry(imageMetadata);
 
+            imageEntry.addEventListener('click', () => this.loadImageEditPage(imageMetadata));
+
             imageList.appendChild(imageEntry);
         }
 
+        this.querySelector('.image-panel').classList.remove('edit-page');
+    };
+
+    async loadImageEditPage(metaData){
+        this.loadedImageId = metaData.id;
+        this.querySelector('.image-editor-page .image-display').style.backgroundImage = `url(${metaData.file_path})`;
+        this.querySelector('.image-editor-page .sent-by-input').value = metaData.sent_by;
+
+        const albumList = this.querySelector('.album-list-inner');
+        while(albumList.firstChild){ albumList.firstChild.remove(); }
+
+        const imageAlbumList = JSON.parse(metaData.album_ids);
+        const albumsResponse = await sendRequest('/frame/albums');
+        if(albumsResponse.success && albumsResponse.entries.length){
+            for(const album of albumsResponse.entries){ albumList.appendChild(new SelectableAlbumEntry(album, imageAlbumList.find(id => id === album.albumId))); }
+        }
+
+        this.querySelector('.image-panel').classList.add('edit-page');
     };
 
     async loadStoragePanel(){

@@ -109,8 +109,8 @@ export default class SetLocationPopup extends HTMLElement{
             <div class="popup-container">
                 <div class="top-row">
                     <div class="back-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px"><path d="M624-96 240-480l384-384 68 68-316 316 316 316-68 68Z"/></svg>
-                        <div>Back</div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="1.75rem" viewBox="0 -960 960 960" ><path d="M624-96 240-480l384-384 68 68-316 316 316 316-68 68Z"/></svg>
+                        <div>Close</div>
                     </div>
                     <input class="location-search-input" placeholder="Search for City or Town" />
                 </div>

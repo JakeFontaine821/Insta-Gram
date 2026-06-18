@@ -13,9 +13,9 @@ AddStyle(/*css*/`
     }
 
     .image-manager-entry .image-display{
-        height: 60px;
-        width: 60px;
-        background-size: contain;
+        height: 80px;
+        width: 80px;
+        background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
     }
