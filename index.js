@@ -15,21 +15,30 @@ const PORT = 3000;
 /****************************************************************************************************/
 /*                              SETTING UP IMAGE STORAGE                                            */
 /****************************************************************************************************/
-const uploadDir = './images';
-if (!fs.existsSync(uploadDir)){ fs.mkdirSync(uploadDir); }
+// const uploadDir = './images';
+// if (!fs.existsSync(uploadDir)){ fs.mkdirSync(uploadDir); }
 
 // Initialize multer with the storage engine (accepts files up to 5MB)
-const upload = multer({
-    storage: multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, uploadDir);
-        },
-        filename: (req, file, cb) => {
-            const name = file.originalname.split('.')[0];
-            cb(null, `${Date.now()}__${Math.random().toString(36).substring(7)}__${file.originalname}`);
-        }
-    }),
-});
+// const upload = multer({
+//     storage: multer.diskStorage({
+//         destination: (req, file, cb) => {
+//             cb(null, uploadDir);
+//         },
+//         filename: (req, file, cb) => {
+//             const name = file.originalname.split('.')[0];
+//             cb(null, `${Date.now()}__${Math.random().toString(36).substring(7)}__${file.originalname}`);
+//         }
+//     }),
+// });
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+// Ensure your uploads directory exists
+const uploadDir = path.join(__dirname, './images');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
 
 /****************************************************************************************************/
 /*                                   IMPORT HELPER MODULES                                          */
@@ -126,7 +135,7 @@ app.post('/sender/albums/rename', (req, res) => {
 });
 
 // Images
-app.post('/sender/photo/save', upload.single('imageFile'), (req, res) => {
+app.post('/sender/photo/save', upload.single('imageFile'), async (req, res) => {
     if (!req.file) { return res.json({ success: false, error: 'Missing required field: \'file\'' }); }
     if (!req.body.metadata) { return res.json({ success: false, error: 'Missing required field: \'metadata\'' }); }
 
@@ -135,17 +144,37 @@ app.post('/sender/photo/save', upload.single('imageFile'), (req, res) => {
     if (!metadata.albumIds) { return res.json({ success: false, error: 'Missing required field: \'albumIds\'' }); }
     if (!metadata.dateAdded) { return res.json({ success: false, error: 'Missing required field: \'dateAdded\'' }); }
 
-    const imageSaveResponse = ImageDatabaseManager.addImage(Object.assign(metadata, { filePath: `/${req.file.path}` }));
-    if(imageSaveResponse.success){ broadcast('imagesaved'); }
-    
-    const parsedAlbumIds = JSON.parse(metadata.albumIds);
-    for(const albumId of parsedAlbumIds){
-        const incremenetResponse = AlbumDatabaseManager.incrementPhotoCount(albumId);
-        if(!incremenetResponse.success){ continue; }
-        broadcast('albumcount', { albumId, count: incremenetResponse.count });
-    }
+    try {
+        const uniqueFilename = `${Date.now()}__${Math.random().toString(36).substring(9)}__${file.originalname}.webp`;
+        const outputPath = path.join(uploadDir, uniqueFilename);
 
-    return res.json(imageSaveResponse);
+        await sharp(req.file.buffer)
+            .resize({
+                width: 1200,
+                height: 1200,
+                fit: 'inside',
+                withoutEnlargement: true
+            })
+            .webp({ quality: 80 })
+            .toFile(outputPath);
+    
+        const savedPathForDB = `/images/${uniqueFilename}`;
+        const imageSaveResponse = ImageDatabaseManager.addImage(Object.assign(metadata, { filePath: savedPathForDB }));
+        if(imageSaveResponse.success){ broadcast('imagesaved'); }
+        
+        const parsedAlbumIds = JSON.parse(metadata.albumIds);
+        for(const albumId of parsedAlbumIds){
+            const incremenetResponse = AlbumDatabaseManager.incrementPhotoCount(albumId);
+            if(!incremenetResponse.success){ continue; }
+            broadcast('albumcount', { albumId, count: incremenetResponse.count });
+        }
+
+        return res.json(imageSaveResponse);
+    }
+    catch(err){
+        console.error('Sharp processing error:', err);
+        res.status(500).json({ err: 'Failed to process image' });
+    }
 });
 
 /****************************************************************************************************/
