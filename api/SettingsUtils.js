@@ -8,10 +8,8 @@ wifi.init({ iface: 'wlan0' });
 async function getWifiNetworks(){
     const allNetworks = await wifi.scan();
     const filteredNetworks = allNetworks.filter(network => network.ssid !== '');
-    console.log(filteredNetworks);
 
     const currentConnection = await wifi.getCurrentConnections();
-    console.log(currentConnection);
 
     // If we're currently connected, assign a CONNECTED flag for the UI
     if(currentConnection.length){
