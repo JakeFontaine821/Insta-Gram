@@ -12,8 +12,10 @@ async function getWifiNetworks(){
     const currentConnection = await wifi.getCurrentConnections();
 
     // If we're currently connected, assign a CONNECTED flag for the UI
-    const foundNetwork = filteredNetworks.find(network => network.ssid === currentConnection[0].ssid)
-    if(currentConnection.length && foundNetwork){ foundNetwork.CONNECTED = true; }
+    if(currentConnection.length){
+        const foundNetwork = filteredNetworks.find(network => network.ssid === currentConnection[0].ssid);
+        if(foundNetwork){ foundNetwork.CONNECTED = true; }
+    }
 
     return { success: true, networks: filteredNetworks };
 };
