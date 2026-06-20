@@ -14,6 +14,7 @@ db.prepare(`
 
 const getLocationStatement = db.prepare(`SELECT * FROM location`);
 function getLocation(){
+    console.log(getLocationStatement.get())
     try{ return { success: true, entries: getLocationStatement.get() }; }
     catch(err){ return { success: false, error: `Failed to get entries from database: ${err}` }; }
 };
