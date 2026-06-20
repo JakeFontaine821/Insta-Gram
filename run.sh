@@ -1,5 +1,11 @@
 #!/bin/bash
 
+npm start &
+
+until nc -z localhost 3000; do
+  sleep 0.5
+done
+
 if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
     # Windows (Git Bash / Cygwin)
     echo "Windows detected."
@@ -22,10 +28,8 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
     LOCAL_IP=$(hostname -I | awk '{print $1}')
 
-    chromium --new-window http://localhost:3000/frame & #--kiosk
+    chromium --new-window http://localhost:3000/frame --kiosk --no-first-run --simulate-outdated-no-buttons
 
 else
     echo "Unknown OS: $OSTYPE"
 fi
-
-npm start
