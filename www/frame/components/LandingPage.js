@@ -12,9 +12,9 @@ AddStyle(/*css*/`
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 0 10vw;
+        padding: 0 3vw;
         gap: 10px;
-    }
+    } 
 
     .landing-page > div{
         flex: 1;
@@ -134,15 +134,15 @@ AddStyle(/*css*/`
         background: #f22;
         padding: 15px 0 10px;
         font-weight: 600;
-        font-size: 4rem;
+        font-size: 4.5rem;
     }
 
     .landing-page .calender-button .date{
-        font-size: 12rem;
+        font-size: 14rem;
     }
 
     .landing-page .calender-button .day{
-        font-size: 3rem;
+        font-size: 3.5rem;
     }
 
     /********************************* WEATHER BUTTON ******************************/
@@ -152,7 +152,7 @@ AddStyle(/*css*/`
         display: flex;
         flex-direction: column;
         align-items: center;
-        font-size: 2.75rem;
+        font-size: 3.5rem;
 
         color: var(--text);
         background-color: #87CEEB;
@@ -172,8 +172,11 @@ AddStyle(/*css*/`
     }
 
     .landing-page .weather-button .top{
-        justify-content: space-evenly;
-        padding: 15px 0;
+        display: flex;
+        flex-direction: column;
+        padding-top: 15px;
+        z-index: 2;
+        gap: 5px;
     }
 
     .landing-page .weather-button .middle{
@@ -183,17 +186,17 @@ AddStyle(/*css*/`
 
     .landing-page .weather-button .middle .current-temp{
         position: absolute;
-        bottom: 0;
+        bottom: -15%;
         left: 10%;
-        font-size: 8rem;
+        font-size: 10rem;
         z-index: 2;
     }
 
     .landing-page .weather-button .middle .icon{
         position: absolute;
-        top: -20%;
+        top: -50%;
         right: 0;
-        width: 65%;
+        width: 70%;
     }
 
     .landing-page .weather-button .bottom{
@@ -312,6 +315,8 @@ export default class LandingPage extends HTMLElement{
         const loadWeather = async () => {
             weatherButton.classList.add('loading');
             const weatherResponse = await sendRequest('/frame/weather');
+            const locationResponse = await sendRequest('/frame/location');
+            console.log(locationResponse)
 
             if(!weatherResponse.success){ // Failed to get info, display to user and try again in a minute
                 weatherButton.innerHTML = 'Failed to get weather information';
@@ -322,6 +327,7 @@ export default class LandingPage extends HTMLElement{
 
             weatherButton.innerHTML = `
                 <div class="top">
+                    <div class="town">${locationResponse.entries.town}</div>
                     <div class="word">${weatherResponse.data.forecast}</div>
                 </div>
                 <div class="middle">

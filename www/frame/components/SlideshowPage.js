@@ -42,9 +42,10 @@ AddStyle(/*css*/`
         align-items: center;
         background-color: var(--g);
         border: 2px solid var(--primary);
-        border-radius: 35px;
-        padding: 10px 20px 10px 15px;
-        height: 70px;
+        border-radius: 40px;
+        padding: 10px 25px 10px 20px;
+        height: 90px;
+        font-size: 2rem;
         cursor: pointer;
     }
 
@@ -83,8 +84,8 @@ AddStyle(/*css*/`
     }
 
     .slideshow-page .footer-row .pause-play-button{
-        height: 120px;
-        width: 120px;
+        height: 140px;
+        width: 140px;
         background-color: #000000bb;
         cursor: pointer;
     }
@@ -116,11 +117,11 @@ export default class SlideshowPage extends HTMLElement{
 
         this.classList.add('slideshow-page', 'hidden');
 
-        this.innerHTML = `
+        this.innerHTML = /*html*/`
             <div class="photo-display"></div>
             <div class="header-row">
                 <div class="back-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px"><path d="M624-96 240-480l384-384 68 68-316 316 316 316-68 68Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="1.75rem" viewBox="0 -960 960 960"><path d="M624-96 240-480l384-384 68 68-316 316 316 316-68 68Z"/></svg>
                     <div>Back</div>
                 </div>
 

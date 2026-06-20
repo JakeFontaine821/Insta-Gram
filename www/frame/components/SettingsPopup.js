@@ -47,9 +47,9 @@ AddStyle(/*css*/`
         justify-content: center;
         background-color: var(--g);
         border: 2px solid var(--primary);
-        border-radius: 35px;
+        border-radius: 40px;
         padding: 10px 20px 10px 15px;
-        height: 70px;
+        height: 90px;
         font-size: 2rem;
         cursor: pointer;
     }
@@ -62,10 +62,11 @@ AddStyle(/*css*/`
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px;
+        padding: 25px 20px;
         border-top: 2px solid var(--accent);
         border-right: 2px solid var(--accent);
         cursor: pointer;
+        font-size: 2.5rem;
     }
 
     .settings-popup .popup-container > .tabs > .tab.selected{
@@ -92,10 +93,10 @@ AddStyle(/*css*/`
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 15px;
+        gap: 25px;
         padding: 20px;
         text-align: center;
-        font-size: 1.75rem;
+        font-size: 2.5rem;
     }
 
     .settings-popup .popup-container .wifi-panel .list-outer{
@@ -112,7 +113,7 @@ AddStyle(/*css*/`
 
     .settings-popup .popup-container .storage-panel > .bar{
         width: 100%;
-        height: 30px;
+        height: 50px;
         position: relative;
         border: 1px solid black;
     }
@@ -127,7 +128,7 @@ AddStyle(/*css*/`
     .settings-popup .popup-container .storage-panel .background{
         width: 100%;
         height: 100%;
-        background-color: #efefef;
+        background-color: #e0e0e0;
     }
 
     .settings-popup .popup-container .power-panel .power-button{
@@ -169,10 +170,10 @@ AddStyle(/*css*/`
 
     .settings-popup .popup-container .image-panel .panel-header > select{
         flex: 1;
-        padding: 10px 0;
+        padding: 20px 0;
         text-align: center;
-        border: 1px solid var(--accent);
-        border-radius: 25px;
+        border: 2px solid var(--accent);
+        border-radius: 30px;
     }
 
     .settings-popup .popup-container .image-panel .image-list-outer{
@@ -208,6 +209,7 @@ AddStyle(/*css*/`
         display: flex;
         align-items: center;
         cursor: pointer;
+        padding: 10px 0;
     }
 
     .settings-popup .popup-container .image-panel .image-editor-page .middle{

@@ -71,6 +71,7 @@ app.get('/images/random', (req, res) => {
 });
 
 // Weather
+app.get('/frame/location', async (req, res) => res.json(await LocationDatabaseManager.getLocation()));
 app.get('/frame/weather', async (req, res) => res.json(await WeatherUtils.getWeatherData()));
 app.post('/frame/weather/set', async (req, res) => res.json(await LocationDatabaseManager.setLocation(req.body.locationInfo)));
 app.post('/frame/weather/suggest', async (req, res) => res.json(await WeatherUtils.getWeatherSuggestions(req.body.query)));

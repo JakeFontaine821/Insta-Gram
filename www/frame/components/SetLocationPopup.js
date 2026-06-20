@@ -14,8 +14,8 @@ AddStyle(/*css*/`
     }
 
     .set-location-popup .popup-container{
-        height: 60vh;
-        width: 60vw;
+        height: 80vh;
+        width: 80vw;
         padding: 20px;
         background-color: var(--background);
         border-radius: 30px;
@@ -36,9 +36,9 @@ AddStyle(/*css*/`
         align-items: center;
         background-color: var(--g);
         border: 2px solid var(--primary);
-        border-radius: 35px;
-        padding: 10px 20px 10px 15px;
-        height: 70px;
+        border-radius: 40px;
+        padding: 0 20px;
+        height: 90px;
         cursor: pointer;
     }
 
@@ -51,7 +51,7 @@ AddStyle(/*css*/`
         border: 2px solid var(--primary);
         border-radius: 35px;
         font-size: 2.5rem;
-        height: 70px;
+        height: 90px;
     }
 
     .set-location-popup .popup-container .lookup-list-outer{
@@ -82,15 +82,15 @@ AddStyle(/*css*/`
         align-items: end;
         padding-bottom: 5px;
         border: 2px solid var(--accent);
-        height: 55px;
-        border-radius: 20px;
+        height: 90px;
+        border-radius: 30px;
         cursor: pointer;
         background: var(--g);
-        font-size: 2.5rem;
+        font-size: 3.5rem;
     }
 
     .set-location-popup .popup-container .suggested-location .rest{
-        font-size: 2rem;
+        font-size: 2.75rem;
     }
 
     .set-location-popup .popup-container .error-text{

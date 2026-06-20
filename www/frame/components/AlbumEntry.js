@@ -5,7 +5,7 @@ AddStyle(/*css*/`
     .album-entry{
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 15px;
         padding: 20px;
         border-radius: 20px;
         background-color: var(--accent);

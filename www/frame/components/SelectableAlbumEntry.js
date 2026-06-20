@@ -3,13 +3,13 @@ import { sendRequest } from '../js/utils.js';
 
 AddStyle(/*css*/`
     .selectable-album-entry{
-        height: 50px;
+        height: 80px;
         width: 100%;
         display: flex;
         justify-content: space-around;
         align-items: center;
         border: 1px solid var(--accent);
-        border-radius: 10px;
+        border-radius: 20px;
         cursor: pointer;
         background: var(--g);
     }
