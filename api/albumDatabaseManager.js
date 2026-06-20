@@ -28,7 +28,6 @@ function createNewAlbum(album_name){
 
     // Create unique id for each album
     let album_id = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)] + Math.random().toString(36).substring(3);
-    console.log(album_id);
     while(getAlbumStatement.get({ album_id })){ album_id = Math.random().toString(36).substring(5); }
 
     const newAlbumObj = {
