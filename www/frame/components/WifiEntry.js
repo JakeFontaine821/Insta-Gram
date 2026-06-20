@@ -124,7 +124,7 @@ export default class WifiEntry extends HTMLElement{
         console.log(this.network);
         forgetNetworkButton.classList.toggle('hidden', !this.network.CONNECTED);
         disconnectButton.classList.toggle('hidden', !this.network.CONNECTED);
-        passwordInputContainer.classList.toggle('hidden', this.network.CONNECTED);
+        passwordInputContainer.classList.toggle('hidden', !!this.network.CONNECTED);
 
         // Expand if password protected OR if already connected. Otherwise connect
         this.querySelector('.main-row').addEventListener('click', async () => {
