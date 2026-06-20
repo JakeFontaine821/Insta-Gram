@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+const sharp = require('sharp');
 const express = require('express');
 
 const app = express();
@@ -145,10 +146,11 @@ app.post('/sender/photo/save', upload.single('imageFile'), async (req, res) => {
     if (!metadata.dateAdded) { return res.json({ success: false, error: 'Missing required field: \'dateAdded\'' }); }
 
     try {
-        const uniqueFilename = `${Date.now()}__${Math.random().toString(36).substring(9)}__${file.originalname}.webp`;
+        const uniqueFilename = `${Date.now()}__${Math.random().toString(36).substring(9)}__${req.file.originalname}.webp`;
         const outputPath = path.join(uploadDir, uniqueFilename);
 
         await sharp(req.file.buffer)
+            .rotate()
             .resize({
                 width: 1200,
                 height: 1200,
