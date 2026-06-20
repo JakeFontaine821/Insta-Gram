@@ -363,7 +363,7 @@ export default class SettingsPopup extends HTMLElement{
         `;
 
         const backButton = this.querySelector('.back-button');
-        backButton.addEventListener('click', () => this.classList.add('hidden'));
+        backButton.addEventListener('click', () => this.hide());
 
         for(const tabClass of ['.about-tab', '.image-tab', '.wifi-tab', '.storage-tab', '.credits-tab', '.power-tab']){
             const tab = this.querySelector(tabClass);
@@ -537,6 +537,13 @@ export default class SettingsPopup extends HTMLElement{
         this.loadStoragePanel();
         this.loadWifiPanel();
         this.loadImagePanel();
+    };
+
+    hide(){
+        this.classList.add('hidden');
+
+        const imageList = this.querySelector('.image-list-inner');
+        while(imageList.firstChild){ imageList.firstChild.remove(); }
     };
 };
 customElements.define('settings-popup', SettingsPopup);

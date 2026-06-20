@@ -15,9 +15,14 @@ AddStyle(/*css*/`
     .image-manager-entry .image-display{
         height: 80px;
         width: 80px;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
+        overflow: hidden;
+    }
+
+    .image-manager-entry .image-display img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
     }
 
     .image-manager-entry .sent-on{
@@ -37,13 +42,13 @@ export default class ImageManagerEntry extends HTMLElement{
 
         this.classList.add('image-manager-entry');
 
-        this.innerHTML = `
-            <div class="image-display"></div>
+        this.innerHTML = /*html*/`
+            <div class="image-display"><img loading="lazy" decoding="async" alt="Loading Image :)"></div>
             <div class="sent-on">${new Date(metadata.date_added).toDateString()}</div>
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="1.75rem" viewBox="0 -860 960 960" style="transform:scaleX(-1)"><path d="M624-96 240-480l384-384 68 68-316 316 316 316-68 68Z"/></svg></div>
         `;
 
-        this.querySelector('.image-display').style.backgroundImage = `url(${metadata.file_path})`;
+        this.querySelector('.image-display img').src = `${metadata.file_path}`;
     };
 };
 customElements.define('image-manager-entry', ImageManagerEntry);

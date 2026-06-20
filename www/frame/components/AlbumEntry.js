@@ -17,7 +17,14 @@ AddStyle(/*css*/`
         height: 400px;
         border-radius: 15px;
         opacity: 0%;
-        background-size: cover;
+        overflow: hidden;
+    }
+
+    .album-entry .photo img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
     }
 
     .album-entry .info-row{
@@ -51,8 +58,8 @@ export default class AlbumEntry extends HTMLElement{
 
         this.classList.add('album-entry', albumInfo.albumId);
 
-        this.innerHTML = `
-            <div class="photo"></div>
+        this.innerHTML = /*html*/`
+            <div class="photo"><img loading="lazy" decoding="async" alt="Loading Image :)"></div>
             <div class="info-row">
                 <div class="name">${albumInfo.albumName}</div>
                 <div class="photo-count">${albumInfo.numberOfPhotos}</div>
@@ -65,10 +72,11 @@ export default class AlbumEntry extends HTMLElement{
             const imageMetadata = await sendRequest(`/images/random?limit=1${this.albumId ? `&albumId=${this.albumId}` : ''}`);
             if(!imageMetadata.success || !imageMetadata.entries.length){ return this.loadImageTimeout = setTimeout(() => loadPhoto(), 1000); }
 
-            photoDiv.style.backgroundImage = `url(${imageMetadata.entries[0].file_path})`;
             photoDiv.style.animation = 'none';
             photoDiv.offsetWidth;
             photoDiv.style.animation = 'imageFade 10s';
+
+            photoDiv.firstChild.src = imageMetadata.entries[0].file_path;
 
             this.loadImageTimeout = setTimeout(() => loadPhoto(), 5000);
         };

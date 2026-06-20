@@ -57,11 +57,20 @@ AddStyle(/*css*/`
 
     .landing-page .photos-button > div{
         height: 100%;
-        background-size: cover;
         opacity: 0%;
+        overflow: hidden;
+        position: relative;
     }
-    
-    
+
+    .landing-page .photos-button > div img{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        object-fit: cover;
+        object-position: center;
+    }
 
     /********************************* CLOCK BUTTON ******************************/
     .landing-page .clock-button{
@@ -202,13 +211,13 @@ export default class LandingPage extends HTMLElement{
         const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][date.getMonth()];
         const day = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][date.getDay()];
 
-        this.innerHTML = `
+        this.innerHTML = /*html*/`
             <div class="left">
                 <div class="button photos-button">
-                    <div style="border-top-left-radius=20px"></div>
-                    <div style="border-top-right-radius=20px"></div>
-                    <div style="border-bottom-left-radius=20px"></div>
-                    <div style="border-bottom-right-radius=20px"></div>
+                    <div style="border-top-left-radius=20px"><img loading="lazy" decoding="async" alt="Loading Image :)"></div>
+                    <div style="border-top-right-radius=20px"><img loading="lazy" decoding="async" alt="Loading Image :)"></div>
+                    <div style="border-bottom-left-radius=20px"><img loading="lazy" decoding="async" alt="Loading Image :)"></div>
+                    <div style="border-bottom-right-radius=20px"><img loading="lazy" decoding="async" alt="Loading Image :)"></div>
                 </div>
             </div>
             <div class="right">
@@ -352,10 +361,11 @@ export default class LandingPage extends HTMLElement{
         for(const [i, div] of photosContainers.entries()){
             if(!imageMetadata.entries[i]){ continue; }
 
-            div.style.backgroundImage = `url(${imageMetadata.entries[i].file_path})`;
             div.style.animation = 'none';
             div.offsetWidth;
             div.style.animation = 'imageFade 10s';
+
+            div.firstChild.src = imageMetadata.entries[i].file_path;
 
             await new Promise(resolve => setTimeout(resolve, 500));
         }
