@@ -50,6 +50,7 @@ async function disconnectWifiNetwork(){
     if(!previousConnection.length){ return { success: true }; }
 
     await wifi.disconnect();
+    await wifi.deleteConnection({ ssid });
 
     const currentConnection = await wifi.getCurrentConnections();
     const success = !currentConnection.length || currentConnection[0].ssid !== previousConnection[0].ssid;

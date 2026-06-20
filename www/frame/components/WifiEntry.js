@@ -121,7 +121,6 @@ export default class WifiEntry extends HTMLElement{
         const disconnectButton = this.querySelector('.disconnect-button');
         const passwordInputContainer = this.querySelector('.password-input-container');
 
-        console.log(this.network);
         forgetNetworkButton.classList.toggle('hidden', !this.network.CONNECTED);
         disconnectButton.classList.toggle('hidden', !this.network.CONNECTED);
         passwordInputContainer.classList.toggle('hidden', !!this.network.CONNECTED);
@@ -153,6 +152,7 @@ export default class WifiEntry extends HTMLElement{
             this.classList.add('loading');
 
             const disconnectResponse = await sendRequest('/frame/wifi/disconnect');
+            console.log(disconnectResponse)
             if(disconnectResponse.success){ this.dispatchEvent(new Event('reload')); }
 
             this.classList.remove('loading');
