@@ -138,20 +138,20 @@ export default class WifiEntry extends HTMLElement{
         });
 
         // Disconnect and Forget network
-        forgetNetworkButton.addEventListener('click', async () => {
-            this.classList.add('loading');
+        // forgetNetworkButton.addEventListener('click', async () => {
+        //     this.classList.add('loading');
 
-            const forgetResponse = await sendRequest('/frame/wifi/forget', { body: { ssid: this.network.ssid } });
-            if(forgetResponse.success){ this.dispatchEvent(new Event('reload')); }
+        //     const forgetResponse = await sendRequest('/frame/wifi/forget', { body: { ssid: this.network.ssid } });
+        //     if(forgetResponse.success){ this.dispatchEvent(new Event('reload')); }
 
-            this.classList.remove('loading');
-        });
+        //     this.classList.remove('loading');
+        // });
 
         // Disconnect network
         disconnectButton.addEventListener('click', async () => {
             this.classList.add('loading');
 
-            const disconnectResponse = await sendRequest('/frame/wifi/disconnect');
+            const disconnectResponse = await sendRequest('/frame/wifi/disconnect', { body: { ssid: this.network.ssid } });
             console.log(disconnectResponse)
             if(disconnectResponse.success){ this.dispatchEvent(new Event('reload')); }
 

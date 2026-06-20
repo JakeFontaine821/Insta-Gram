@@ -45,7 +45,7 @@ async function setWifiNetwork(ssid=undefined, password=''){
 };
 
 // Disconnect from current network
-async function disconnectWifiNetwork(){
+async function disconnectWifiNetwork(ssid){
     const previousConnection = await wifi.getCurrentConnections();
     if(!previousConnection.length){ return { success: true }; }
 
@@ -53,18 +53,10 @@ async function disconnectWifiNetwork(){
     await wifi.deleteConnection({ ssid });
 
     const currentConnection = await wifi.getCurrentConnections();
+    console.log('CONNECTION CHECK', currentConnection);
     const success = !currentConnection.length || currentConnection[0].ssid !== previousConnection[0].ssid;
 
     return { success };
-};
-
-async function forgetNetwork(ssid){
-    if(!ssid){ return { success: false, error: 'Missing required field \'ssid\'' }; }
-
-    await disconnectWifiNetwork();
-    await wifi.deleteConnection({ ssid });
-
-    return { success: true };
 };
 
 /****************************************Storage Utils */
@@ -97,7 +89,6 @@ module.exports = {
     getWifiNetworks,
     setWifiNetwork,
     disconnectWifiNetwork,
-    forgetNetwork,
     getStorage,
     shutdownSystem
 };
