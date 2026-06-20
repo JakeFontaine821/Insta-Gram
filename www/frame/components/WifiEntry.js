@@ -152,7 +152,6 @@ export default class WifiEntry extends HTMLElement{
             this.classList.add('loading');
 
             const disconnectResponse = await sendRequest('/frame/wifi/disconnect', { body: { ssid: this.network.ssid } });
-            console.log(disconnectResponse)
             if(disconnectResponse.success){ this.dispatchEvent(new Event('reload')); }
 
             this.classList.remove('loading');
