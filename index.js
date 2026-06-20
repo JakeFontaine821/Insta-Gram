@@ -180,4 +180,5 @@ function broadcast(event, data={}, sender=null) {
 
 // id | file_path | sent_by | date_added | album_ids
 
-app.listen(PORT, HOST, () => console.log(`Running on port ${HOST}:${PORT}`));
+app.listen(3000, () => console.log(`Running on port ${HOST}:${PORT}`));
+// app.listen(PORT, HOST, () => console.log(`Running on port ${HOST}:${PORT}`));

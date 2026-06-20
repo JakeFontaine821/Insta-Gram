@@ -121,6 +121,7 @@ export default class WifiEntry extends HTMLElement{
         const disconnectButton = this.querySelector('.disconnect-button');
         const passwordInputContainer = this.querySelector('.password-input-container');
 
+        console.log(this.network);
         forgetNetworkButton.classList.toggle('hidden', !this.network.CONNECTED);
         disconnectButton.classList.toggle('hidden', !this.network.CONNECTED);
         passwordInputContainer.classList.toggle('hidden', this.network.CONNECTED);
