@@ -2,7 +2,7 @@
 
 // Setup Wifi
 const wifi = require('node-wifi');
-wifi.init({ iface: null });
+wifi.init({ iface: 'wlan0' });
 
 // Get all Networks available and mark one as currently connected if necessary
 async function getWifiNetworks(){
