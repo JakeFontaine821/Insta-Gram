@@ -22,7 +22,7 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
     LOCAL_IP=$(hostname -I | awk '{print $1}')
 
-    chromium --new-window http://$LOCAL_IP:3000/frame & #--kiosk
+    chromium --new-window http://localhost:3000/frame & #--kiosk
 
 else
     echo "Unknown OS: $OSTYPE"
