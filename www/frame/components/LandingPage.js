@@ -315,8 +315,6 @@ export default class LandingPage extends HTMLElement{
         const loadWeather = async () => {
             weatherButton.classList.add('loading');
             const weatherResponse = await sendRequest('/frame/weather');
-            const locationResponse = await sendRequest('/frame/location');
-            console.log(locationResponse)
 
             if(!weatherResponse.success){ // Failed to get info, display to user and try again in a minute
                 weatherButton.innerHTML = 'Failed to get weather information';
@@ -327,7 +325,7 @@ export default class LandingPage extends HTMLElement{
 
             weatherButton.innerHTML = `
                 <div class="top">
-                    <div class="town">${locationResponse.entries.town}</div>
+                    <div class="town">${weatherResponse.location.town}</div>
                     <div class="word">${weatherResponse.data.forecast}</div>
                 </div>
                 <div class="middle">

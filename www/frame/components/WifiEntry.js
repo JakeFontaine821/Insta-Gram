@@ -144,8 +144,11 @@ export default class WifiEntry extends HTMLElement{
             this.classList.remove('loading');
         });
 
-        // Connect to password protected network
+        // show keyboard on focus
         const passwordInput = this.querySelector('.password-input');
+        passwordInput.addEventListener('focus', () => this.dispatchEvent(Object.assign(new Event('showkeyboard', { bubbles: true }), { element: passwordInput })));
+
+        // Connect to password protected network
         this.querySelector('.connect-button').addEventListener('click', async () => {
             if(passwordInput.value === ''){ return passwordInput.classList.add('error'); }
             passwordInput.classList.remove('error');

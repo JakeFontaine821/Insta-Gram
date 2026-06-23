@@ -26,7 +26,7 @@ async function getWeatherData(){
         forecast: getCategoryFromWMOCode(weatherResponseJson.current.weather_code)
     };
 
-    return { success: true, data: currentWeatherInfo };
+    return { success: true, data: currentWeatherInfo, location };
 };
 
 function getCategoryFromWMOCode(code) {

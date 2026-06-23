@@ -179,6 +179,8 @@ export default class SetLocationPopup extends HTMLElement{
                 suggestTimeout = null;
             }, 500);
         });
+
+        locationSearchInput.addEventListener('focus', () => this.dispatchEvent(Object.assign(new Event('showkeyboard', { bubbles: true }), { element: locationSearchInput })));
     };
 
     SwapDisplay(showNoSuggested=false){

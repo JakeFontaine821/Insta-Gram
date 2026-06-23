@@ -2,6 +2,7 @@ import AddStyle from '../js/Styles.js';
 import './LandingPage.js';
 import './AlbumPage.js';
 import './SlideshowPage.js';
+import './KeyboardOverlay.js';
 
 AddStyle(`
     .frame-root-page{
@@ -20,6 +21,7 @@ export default class FrameRootPage extends HTMLElement{
             <landing-page></landing-page>
             <album-page></album-page>
             <slideshow-page></slideshow-page>
+            <keyboard-overlay></keyboard-overlay>
         `;
 
         const pages = {
@@ -27,6 +29,7 @@ export default class FrameRootPage extends HTMLElement{
             'albums': document.querySelector('.album-page'),
             'slideshow': document.querySelector('.slideshow-page')
         };
+        const keyboardOverlay = document.querySelector('keyboard-overlay');
 
         const swapPages = (page, albumId) => {
             for(const [ pageKey, pageElement ] of Object.entries(pages)){
@@ -36,6 +39,9 @@ export default class FrameRootPage extends HTMLElement{
 
         for(const [ pageKey, pageElement ] of Object.entries(pages)){
             pageElement.addEventListener('switchpages', ({page, albumId}) => swapPages(page, albumId));
+
+            // an input was selected, show the keyboard overlay and set the element to edit
+            pageElement.addEventListener('showkeyboard', ({element}) => keyboardOverlay.show(element));
         }
     };
 };

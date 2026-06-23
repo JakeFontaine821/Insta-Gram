@@ -287,9 +287,9 @@ export default class SettingsPopup extends HTMLElement{
                     <div class="image-panel hidden">
                         <div class="image-list-page">
                             <div class="panel-header">
-                                <select class="album-input">
+                                <select class="album-select">
                                 </select>
-                                <select class="sent-by-input">
+                                <select class="sent-by-select">
                                 </select>
                             </div>
                             <div class="image-list-outer">
@@ -383,11 +383,14 @@ export default class SettingsPopup extends HTMLElement{
         this.querySelector('.power-button').addEventListener('click', () => sendRequest('/frame/poweroff'));
 
         // Filter update for the image panel, reload the list as specified
-        this.querySelector('.album-input').addEventListener('change', () => this.loadImageList());
-        this.querySelector('.sent-by-input').addEventListener('change', () => this.loadImageList());
+        this.querySelector('.album-select').addEventListener('change', () => this.loadImageList());
+        this.querySelector('.sent-by-select').addEventListener('change', () => this.loadImageList());
 
         // Image metadata edit page setup
         this.querySelector('.image-editor-page .close-button').addEventListener('click', () => this.loadImageList());
+
+        const sentByInput = this.querySelector('.image-editor-page .sent-by-input');
+        sentByInput.addEventListener('focus', () => this.dispatchEvent(Object.assign(new Event('showkeyboard', { bubbles: true }), { element: sentByInput })));
 
         this.loadedImageId = null;
         this.querySelector('.image-editor-page .save-button').addEventListener('click', async () => {
@@ -396,7 +399,7 @@ export default class SettingsPopup extends HTMLElement{
             const saveResponse = await sendRequest('/frame/images/update', { body: {
                 id: this.loadedImageId,
                 albumIds: JSON.stringify(Array.from(this.querySelectorAll('.image-editor-page .selectable-album-entry.selected'), albumEntry => albumEntry.id)),
-                sentBy: this.querySelector('.image-editor-page .sent-by-input').value
+                sentBy: sentByInput.value
             } });
             if(!saveResponse.success){ return; }
 
@@ -407,7 +410,7 @@ export default class SettingsPopup extends HTMLElement{
     async loadImagePanel(){
 
         // Handle the album select
-        const albumSelect = this.querySelector('.album-input');
+        const albumSelect = this.querySelector('.album-select');
         while(albumSelect.firstChild){ albumSelect.firstChild.remove(); }
         albumSelect.appendChild(new Option('Select Album', ''));
 
@@ -417,7 +420,7 @@ export default class SettingsPopup extends HTMLElement{
         }
 
         // Handle the posted by select
-        const postedBySelect = this.querySelector('.sent-by-input');
+        const postedBySelect = this.querySelector('.sent-by-select');
         while(postedBySelect.firstChild){ postedBySelect.firstChild.remove(); }
         postedBySelect.appendChild(new Option('Select Sender', ''));
 
@@ -432,8 +435,8 @@ export default class SettingsPopup extends HTMLElement{
     async loadImageList(){
         this.loadedImageId = null;
 
-        const albumSelect = this.querySelector('.album-input');
-        const postedBySelect = this.querySelector('.sent-by-input');
+        const albumSelect = this.querySelector('.album-select');
+        const postedBySelect = this.querySelector('.sent-by-select');
         // Load the images
         const queryParams = (() => {
             let query = '?';
@@ -500,32 +503,32 @@ export default class SettingsPopup extends HTMLElement{
 
     async loadWifiPanel(){
         const wifiResponse = await sendRequest('/frame/wifi');
-        // const a = [{
-        //     ssid: 'network 1',
-        //     CONNECTED: true,
-        //     quality: 80,
-        //     security: 'WP0'
-        // },{
-        //     ssid: 'network 2',
-        //     CONNECTED: false,
-        //     quality: 50,
-        //     security: 'WP0'
-        // },{
-        //     ssid: 'network 3',
-        //     CONNECTED: false,
-        //     quality: 30,
-        //     security: ''
-        // },{
-        //     ssid: 'network 4',
-        //     CONNECTED: false,
-        //     quality: 70,
-        //     security: 'WP0'
-        // }];
+        const a = [{
+            ssid: 'network 1',
+            CONNECTED: true,
+            quality: 80,
+            security: 'WP0'
+        },{
+            ssid: 'network 2',
+            CONNECTED: false,
+            quality: 50,
+            security: 'WP0'
+        },{
+            ssid: 'network 3',
+            CONNECTED: false,
+            quality: 30,
+            security: ''
+        },{
+            ssid: 'network 4',
+            CONNECTED: false,
+            quality: 70,
+            security: 'WP0'
+        }];
 
         const wifiList = this.querySelector('.wifi-panel .list-inner');
         while(wifiList.firstChild){ wifiList.firstChild.remove(); }
 
-        for(const network of wifiResponse.networks){
+        for(const network of a/*wifiResponse.networks*/){
             const newWifiEntry = new WifiEntry(network);
 
             newWifiEntry.addEventListener('reload', () => this.loadWifiPanel());
