@@ -70,11 +70,10 @@ AddStyle(/*css*/`
     .slideshow-page .footer-row{
         position: absolute;
         width: 100%;
-        bottom: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        bottom: -120px;
+        bottom: -140px;
         transition: bottom .2s;
     }
 
