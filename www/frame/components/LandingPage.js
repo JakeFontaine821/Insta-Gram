@@ -152,18 +152,18 @@ AddStyle(/*css*/`
         display: flex;
         flex-direction: column;
         align-items: center;
-        font-size: 3.5rem;
+        font-size: 3.6rem;
 
         color: var(--text);
         background-color: #87CEEB;
-        text-shadow: 0px 0px 5px #87CEEB;
+        text-shadow: 2px 2px 10px #87CEEB, -2px 2px 10px #87CEEB, 2px -2px 10px #87CEEB, -2px -2px 10px #87CEEB;
         font-weight: 600;
     }
 
     .landing-page .weather-button.night{
         color: var(--g);
         background-color: #131862;
-        text-shadow: 0px 0px 5px #131862;
+        text-shadow: 2px 2px 10px #131862, -2px 2px 10px #131862, 2px -2px 10px #131862, -2px -2px 10px #131862;
     }
 
     .landing-page .weather-button > div{
@@ -186,15 +186,15 @@ AddStyle(/*css*/`
 
     .landing-page .weather-button .middle .current-temp{
         position: absolute;
-        bottom: -15%;
-        left: 10%;
+        bottom: -5%;
+        left: 13%;
         font-size: 10rem;
         z-index: 2;
     }
 
     .landing-page .weather-button .middle .icon{
         position: absolute;
-        top: -50%;
+        top: -40%;
         right: 0;
         width: 70%;
     }
