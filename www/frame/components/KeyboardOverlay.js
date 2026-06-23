@@ -189,11 +189,12 @@ export default class KeyboardOverlay extends HTMLElement{
     };
 
     hide(){
-        console.log(this.INPUT_ELEMENT)
-        this.INPUT_ELEMENT.dispatchEvent(new Event('change'));
-        this.INPUT_ELEMENT = null;
+        if(this.INPUT_ELEMENT){
+            this.INPUT_ELEMENT.dispatchEvent(new Event('change'));
+            this.INPUT_ELEMENT = null;
+        }
 
-        KEYBOARD_ELEMENT.classList.remove('capslock', 'alt');
+        this.querySelector('.keyboard').classList.remove('capslock', 'alt');
 
         this.classList.add('hidden');
     };
