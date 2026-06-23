@@ -189,6 +189,7 @@ export default class KeyboardOverlay extends HTMLElement{
     };
 
     hide(){
+        console.log(this.INPUT_ELEMENT)
         this.INPUT_ELEMENT.dispatchEvent(new Event('change'));
         this.INPUT_ELEMENT = null;
 
