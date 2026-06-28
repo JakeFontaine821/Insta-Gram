@@ -207,5 +207,6 @@ function broadcast(event, data={}, sender=null) {
 
 // id | file_path | sent_by | date_added | album_ids
 
-app.listen(3000, () => console.log(`Running on port ${HOST}:${PORT}`));
-// app.listen(PORT, HOST, () => console.log(`Running on port ${HOST}:${PORT}`));
+const connectionInformation = SettingsUtils.getHostAndPort();
+app.listen(connectionInformation.port, () => console.log(`Running on port ${connectionInformation.host}:${connectionInformation.port}`));
+// app.listen(connectionInformation.port,connectionInformation.host, () => console.log(`Running on port ${connectionInformation.host}:${connectionInformation.port}`));
