@@ -209,4 +209,3 @@ function broadcast(event, data={}, sender=null) {
 
 const connectionInformation = SettingsUtils.getHostAndPort();
 app.listen(connectionInformation.port, () => console.log(`Running on port ${connectionInformation.host}:${connectionInformation.port}`));
-// app.listen(connectionInformation.port,connectionInformation.host, () => console.log(`Running on port ${connectionInformation.host}:${connectionInformation.port}`));
