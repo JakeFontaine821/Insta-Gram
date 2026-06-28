@@ -17,6 +17,8 @@ async function getWifiNetworks(){
         if(foundNetwork){ foundNetwork.CONNECTED = true; }
     }
 
+    console.log(filteredNetworks);
+
     return { success: true, networks: filteredNetworks };
 };
 
