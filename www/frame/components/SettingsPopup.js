@@ -488,6 +488,8 @@ export default class SettingsPopup extends HTMLElement{
         const storageResponse = await sendRequest('/frame/storage');
         const free = storageResponse.data.free / 1000000000; // converting bytes to gigabytes
         const total = storageResponse.data.total / 1000000000; // converting bytes to gigabytes
+        const used = Math.round(total - free);
+        console.log(storageResponse.data);
 
         const imageCountResponse = await sendRequest('/frame/storage/count');
         const photoCount = imageCountResponse.count;
@@ -497,8 +499,8 @@ export default class SettingsPopup extends HTMLElement{
         fillBar.style.width = `${percentStorageUsed}%`;
         fillBar.style.backgroundColor = percentStorageUsed < 75 ? 'green' : percentStorageUsed < 85 ? 'yellow' : percentStorageUsed < 95 ? 'orange' : 'red';
 
-        this.querySelector('.storage-panel .storage-info').innerHTML = `You've used ${Math.round(total - free)}gb of storage and there is ${Math.round(free)}gb remaining`;
-        this.querySelector('.storage-panel .image-info').innerHTML = photoCount ? `There are currently ${photoCount} photos uploaded, you can upload about ${Math.round((total / free) * photoCount)} more photos` : '';
+        this.querySelector('.storage-panel .storage-info').innerHTML = `You've used ${used}gb of storage and there is ${Math.round(free)}gb remaining`;
+        this.querySelector('.storage-panel .image-info').innerHTML = photoCount ? `There are currently ${photoCount} photos uploaded, you can upload about ${Math.round((total / used) * photoCount)} more photos` : '';
     };
 
     async loadWifiPanel(){
