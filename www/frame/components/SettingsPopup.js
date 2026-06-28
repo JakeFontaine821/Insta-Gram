@@ -506,6 +506,7 @@ export default class SettingsPopup extends HTMLElement{
 
         const wifiList = this.querySelector('.wifi-panel .list-inner');
         while(wifiList.firstChild){ wifiList.firstChild.remove(); }
+        console.log(wifiResponse);
 
         for(const network of wifiResponse.networks){
             const newWifiEntry = new WifiEntry(network);

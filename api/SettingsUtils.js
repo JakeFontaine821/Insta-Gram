@@ -25,6 +25,8 @@ async function getWifiNetworks(){
         connectionMap.set(connection.ssid, connection);
     }
 
+    console.log(connectionMap.values())
+
     return { success: true, networks: connectionMap.values() };
 };
 
