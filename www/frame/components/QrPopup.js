@@ -71,9 +71,10 @@ export default class QrPopup extends HTMLElement{
 
         (async () => {
             const addressResponse = await sendRequest('/frame/host');
+
             const url = `http://${addressResponse.host}:${addressResponse.port}/sender`;
 
-            this.querySelector('.url').innerHTML = url;
+            this.querySelector('.url').innerHTML = addressResponse.host !== 'localhost' ? url : 'Please connect to a wifi';
             new QRCode(this.querySelector('.qr-code'), url);
         })();
 
