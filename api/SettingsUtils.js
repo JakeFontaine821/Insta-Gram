@@ -17,8 +17,6 @@ async function getWifiNetworks(){
         if(foundNetwork){ foundNetwork.CONNECTED = true; }
     }
 
-    console.log(filteredNetworks);
-
     const connectionMap  = new Map();
     for(const connection of filteredNetworks){
         const dupeConnection = connectionMap.get(connection.ssid);
