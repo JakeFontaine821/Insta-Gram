@@ -20,7 +20,7 @@ async function getWifiNetworks(){
     const connectionMap  = new Map();
     for(const connection of filteredNetworks){
         const dupeConnection = connectionMap.get(connection.ssid);
-        if(dupeConnection && dupeConnection.signal_level > connection.signal_level){ return; }
+        if(dupeConnection && dupeConnection.signal_level > connection.signal_level){ continue; }
 
         connectionMap.set(connection.ssid, connection);
     }
@@ -78,6 +78,7 @@ async function getStorage(){
 
 /****************************************Power Utils */
 const { exec } = require('child_process');
+const { constants } = require('buffer');
 const shutdownSystem = () => {
     const platform = process.platform;
     let command = '';
