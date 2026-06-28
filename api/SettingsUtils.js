@@ -18,9 +18,16 @@ async function getWifiNetworks(){
     }
 
     console.log(filteredNetworks);
-    console.log(new Set(filteredNetworks));
 
-    return { success: true, networks: filteredNetworks };
+    const connectionMap  = new Map();
+    for(const connection of filteredNetworks){
+        const dupeConnection = connectionMap.get(connection.ssid);
+        if(dupeConnection && dupeConnection.signal_level > connection.signal_level){ return; }
+
+        connectionMap.set(connection.ssid, connection);
+    }
+
+    return { success: true, networks: connectionMap.values() };
 };
 
 // Get Current returns array with full object when connected
