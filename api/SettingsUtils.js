@@ -27,7 +27,7 @@ async function getWifiNetworks(){
 
     console.log(connectionMap.values())
 
-    return { success: true, networks: connectionMap.values() };
+    return { success: true, networks: Array.from(connectionMap.values()) };
 };
 
 // Get Current returns array with full object when connected
