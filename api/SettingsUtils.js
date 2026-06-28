@@ -65,9 +65,9 @@ async function disconnectWifiNetwork(ssid){
     return { success };
 };
 
-async function getHostAndPort(){
+function getHostAndPort(){
     return { host: Array.from(Object.values(networkInterfaces())).flat().find(net => net.family === 'IPv4' && !net.internal)?.address ?? 'localhost', port: 3000 };
-}
+};
 
 /****************************************Storage Utils */
 const disk = require('diskusage');
