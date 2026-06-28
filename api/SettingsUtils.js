@@ -18,6 +18,7 @@ async function getWifiNetworks(){
     }
 
     console.log(filteredNetworks);
+    console.log(new Set(filteredNetworks));
 
     return { success: true, networks: filteredNetworks };
 };
