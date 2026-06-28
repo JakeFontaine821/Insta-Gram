@@ -9,10 +9,6 @@ app.use(express.json());
 app.use('/', express.static(path.join(__dirname, './www')));
 app.use('/images', express.static(path.join(__dirname, './images')));
 
-const { networkInterfaces } = require('os');
-const HOST = Array.from(Object.values(networkInterfaces())).flat().find(net => net.family === 'IPv4' && !net.internal)?.address ?? 'localhost';
-const PORT = 3000;
-
 /****************************************************************************************************/
 /*                              SETTING UP IMAGE STORAGE                                            */
 /****************************************************************************************************/
@@ -56,7 +52,7 @@ const ImageDatabaseManager = require(path.join(__dirname, '/api/imageDatabaseMan
 app.get('/', (req, res) => res.json({ success: true, message: "Sending JSON" }));
 
 app.get('/frame', (req, res) => res.sendFile(path.join(__dirname, '/www/frame/index.html')));
-app.get('/frame/host', (req, res) => res.json({ host: HOST, port: PORT }));
+app.get('/frame/host', (req, res) => res.json(SettingsUtils.getHostAndPort()));
 
 app.get('/frame/albums', (req, res) => res.json(AlbumDatabaseManager.getAllAlbums()));
 app.get('/images/random', (req, res) => {
@@ -77,7 +73,7 @@ app.post('/frame/weather/set', async (req, res) => res.json(await LocationDataba
 app.post('/frame/weather/suggest', async (req, res) => res.json(await WeatherUtils.getWeatherSuggestions(req.body.query)));
 
 // Wifi Settings
-SettingsUtils.getWifiNetworks();
+// SettingsUtils.getWifiNetworks();
 // const wifi = require('node-wifi');
 // wifi.init({ iface: null });
 // (async () => {
@@ -92,7 +88,6 @@ app.post('/frame/images/update', async (req, res) => res.json(await ImageDatabas
 app.get('/frame/wifi', async (req, res) => res.json(await SettingsUtils.getWifiNetworks()));
 app.post('/frame/wifi/connect', async (req, res) => res.json(await SettingsUtils.setWifiNetwork(req.body.ssid, req.body.password)));
 app.post('/frame/wifi/disconnect', async (req, res) => res.json(await SettingsUtils.disconnectWifiNetwork(req.body.ssid)));
-// app.post('/frame/wifi/forget', async (req, res) => res.json(await SettingsUtils.forgetNetwork(req.body.ssid)));
 
 // Storage Display
 // https://www.npmjs.com/package/diskusage

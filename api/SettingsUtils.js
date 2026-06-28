@@ -3,6 +3,7 @@
 // Setup Wifi
 const wifi = require('node-wifi');
 wifi.init({ iface: 'wlan0' });
+const { networkInterfaces } = require('os');
 
 // Get all Networks available and mark one as currently connected if necessary
 async function getWifiNetworks(){
@@ -66,6 +67,10 @@ async function disconnectWifiNetwork(ssid){
     return { success };
 };
 
+async function getHostAndPort(){
+    return { host: Array.from(Object.values(networkInterfaces())).flat().find(net => net.family === 'IPv4' && !net.internal)?.address ?? 'localhost', port: 3000 };
+}
+
 /****************************************Storage Utils */
 const disk = require('diskusage');
 const os = require('os');
@@ -97,6 +102,7 @@ module.exports = {
     getWifiNetworks,
     setWifiNetwork,
     disconnectWifiNetwork,
+    getHostAndPort,
     getStorage,
     shutdownSystem
 };
