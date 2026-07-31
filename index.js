@@ -83,6 +83,30 @@ app.post('/frame/weather/suggest', async (req, res) => res.json(await WeatherUti
 app.get('/frame/images/all', async (req, res) => res.json(await ImageDatabaseManager.getAllImages(req.query)));
 app.get('/frame/senders/all', async (req, res) => res.json(await ImageDatabaseManager.getAllSenders()));
 app.post('/frame/images/update', async (req, res) => res.json(await ImageDatabaseManager.updateImageMetadata(req.body)));
+app.post('/frame/images/delete', async (req, res) => {
+    if(!req.body.id){ return res.json({ success: false, error: 'Missing required query parameter: \'id\'' }); }
+    if(!req.body.filePath){ return res.json({ success: false, error: 'Missing required query parameter: \'filePath\'' }); }
+
+    // remove file
+    try {
+        const localPath = req.body.filePath.slice(1);
+        fs.unlinkSync(localPath);
+        console.log('Image file deleted successfully.');
+    }
+    catch (err) {
+        if(err.code === 'ENOENT'){ console.log('File already removed, removing from db'); }
+        else{
+            console.error('Error removing file: ', err);
+            return res.json({ success: false, error: `Failed to delete image file: ${err}` });
+        }
+    }
+
+    // remove from db
+    const databaseResponse = await ImageDatabaseManager.deleteImageMetadata(req.body);
+    if(!databaseResponse.success){ return res.json({ success: false, error: databaseResponse.error }); }
+
+    res.json({ success: true });
+});
 
 // https://github.com/friedrith/node-wifi
 app.get('/frame/wifi', async (req, res) => res.json(await SettingsUtils.getWifiNetworks()));

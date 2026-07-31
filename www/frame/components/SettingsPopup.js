@@ -170,7 +170,7 @@ AddStyle(/*css*/`
 
     .settings-popup .popup-container .image-panel .panel-header > select{
         flex: 1;
-        padding: 20px 0;
+        padding: 30px 0;
         text-align: center;
         border: 2px solid var(--accent);
         border-radius: 30px;
@@ -186,6 +186,7 @@ AddStyle(/*css*/`
         display: flex;
         flex-direction: column;
         gap: 5px;
+        padding-right: 5px;
     }
 
     .settings-popup .popup-container .image-panel .image-editor-page{
@@ -241,7 +242,13 @@ AddStyle(/*css*/`
         gap: 5px;
     }
 
-    .settings-popup .popup-container .image-panel .image-editor-page .save-button{
+    .settings-popup .popup-container .image-panel .image-editor-page .right .bottom{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .settings-popup .popup-container .image-panel .image-editor-page .right .bottom > div{
         display: flex;
         align-items: center;
         justify-content: center;
@@ -321,6 +328,9 @@ export default class SettingsPopup extends HTMLElement{
                                     <div class="save-button">
                                         Save
                                     </div>
+                                    <div class="delete-button">
+                                        Delete
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -349,8 +359,8 @@ export default class SettingsPopup extends HTMLElement{
                         <div>All Software for the application was written by</div>
                         <div>Jake :)</div>
                         <div></div>
-                        <div>Building the frame was contributed by TODO</div>
-                        <div></div>
+                        <div>Building the frame was contributed by</div>
+                        <div>Ben :)</div>
                         <div>The name "Insta-Gram" was coined by</div>
                         <div>Jason :)</div>
                     </div>
@@ -400,6 +410,19 @@ export default class SettingsPopup extends HTMLElement{
                 id: this.loadedImageId,
                 albumIds: JSON.stringify(Array.from(this.querySelectorAll('.image-editor-page .selectable-album-entry.selected'), albumEntry => albumEntry.id)),
                 sentBy: sentByInput.value
+            } });
+            if(!saveResponse.success){ return; }
+
+            this.loadImageList();
+        });
+
+        this.querySelector('.image-editor-page .delete-button').addEventListener('click', async () => {
+            if(!this.loadedImageId){ return; }
+            if(!confirm('Are you sure you want to delete this photo?')){ return; }
+
+            const saveResponse = await sendRequest('/frame/images/delete', { body: {
+                id: this.loadedImageId,
+                filePath: this.loadedImageURL,
             } });
             if(!saveResponse.success){ return; }
 
@@ -469,6 +492,7 @@ export default class SettingsPopup extends HTMLElement{
 
     async loadImageEditPage(metaData){
         this.loadedImageId = metaData.id;
+        this.loadedImageURL = metaData.file_path;
         this.querySelector('.image-editor-page .image-display').style.backgroundImage = `url(${metaData.file_path})`;
         this.querySelector('.image-editor-page .sent-by-input').value = metaData.sent_by;
 
@@ -508,7 +532,6 @@ export default class SettingsPopup extends HTMLElement{
 
         const wifiList = this.querySelector('.wifi-panel .list-inner');
         while(wifiList.firstChild){ wifiList.firstChild.remove(); }
-        console.log(wifiResponse);
 
         for(const network of wifiResponse.networks){
             const newWifiEntry = new WifiEntry(network);

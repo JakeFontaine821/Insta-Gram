@@ -138,23 +138,23 @@ AddStyle(/*css*/`
 
     /* Width of the scrollbar */
     ::-webkit-scrollbar {
-        width: 5px;
+        width: 100px;
     }
 
     /* Track (background of scrollbar) */
     ::-webkit-scrollbar-track {
         background: transparent;
-        border-radius: 10px;
+        border-radius: 30px;
     }
 
     /* Thumb (the draggable handle) */
     ::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 10px;
+        background: var(--primary);
+        border-radius: 30px;
     }
 
     /* Thumb on hover */
     ::-webkit-scrollbar-thumb:hover {
-        background: #555;
+        background: var(--accent);
     }
 `);

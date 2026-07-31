@@ -62,7 +62,15 @@ function addImage(metaData){
 const updateImageStatement = db.prepare('UPDATE imageMetadata SET sent_by=@sentBy, album_ids=@albumIds WHERE id=@id');
 function updateImageMetadata(metaData){
     try{ updateImageStatement.run(metaData); }
-    catch(err){ console.log(err); return { success: false, error: `Failed to insert metadata: ${err}` }; }
+    catch(err){ console.log(err); return { success: false, error: `Failed to update metadata: ${err}` }; }
+
+    return { success: true };
+};
+
+const deleteImageStatement = db.prepare('DELETE FROM imageMetadata WHERE id=@id');
+function deleteImageMetadata(metaData){
+    try{ deleteImageStatement.run(metaData); }
+    catch(err){ return { success: false, error: `Failed to delete metadata: ${err}` }; }
 
     return { success: true };
 };
@@ -86,6 +94,7 @@ module.exports = {
     getRandomImages_album,
     addImage,
     updateImageMetadata,
+    deleteImageMetadata,
     totalImageCount,
     totalImageCount_album
 };
